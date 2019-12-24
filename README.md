@@ -42,10 +42,10 @@
 - 《高性能JavaScript》 :heavy_check_mark:
 #### 框架
 - Vue(vuex、vue-router)
-  - snabbdob :heavy_check_mark:
-  - vue源码学习 :heavy_check_mark: :clock10:
+  - snabbdom源码学习 :heavy_check_mark:
+  - vue源码学习 :clock10:
   - vuex源码学习
-  - vue-router源码学习 :heavy_check_mark: :clock10:
+  - vue-router源码学习 :clock10:
 - React(redux、mobx、react-router)
 - Angular
 - 小程序(mpx)
