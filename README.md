@@ -7,7 +7,7 @@
 
 > 不积跬步，无以至千里；不积小流，无以成江海。
 
-**已完成 :heavy_check_mark: **、**进行中 :clock10:**、**进阶学习 :ghost:**
+ **已完成 :heavy_check_mark: **、**进行中 :clock10:**、**进阶学习 :ghost:**
 
 ## 计算机基础
 ### 操作系统
@@ -53,7 +53,7 @@
   - Ts重构axios
 - SSR(服务端渲染)
 ### 后端
-- NodeJs(koa2、nestJs) :heavy_check_mark: :clock10:
+- NodeJs(koa2、nestJs) :clock10:
 - Go :ghost:
 ### 其它
 - 前端性能优化
