@@ -31,6 +31,7 @@
 - 《CSS揭秘》:heavy_check_mark: **30%**
 - HTML5 新标签 :heavy_check_mark:
 - CSS动画
+- SVG
 - Canvas :ghost:
 - WebGL(three.js) :ghost:
 ### JS/TS
