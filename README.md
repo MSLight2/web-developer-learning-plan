@@ -30,10 +30,18 @@
 ### HTML/CSS
 - 《CSS揭秘》:heavy_check_mark: **30%**
 - HTML5 新标签 :heavy_check_mark:
+- CSS 属性 [CSS 参考](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference)
 - CSS动画
 - Canvas :ghost:
 - WebGL(three.js) :ghost:
 ### JS/TS
+- Vue 源码学习 :heavy_check_mark: :clock10:
+- Vue Router 源码学习 :heavy_check_mark: :clock10:
+- Vuex 源码学习
+- React
+- 基础
+  - es5、es6继承
+  - call apply、bind、JSON.stringify、JSON.Parse、Promise、async await实现
 #### 书籍
 - 《JS高级程序设计》 :heavy_check_mark:
 - 《你所不知道的JavaScript上卷》 :heavy_check_mark:
@@ -42,19 +50,18 @@
 - 《高性能JavaScript》 :heavy_check_mark:
 #### 框架
 - Vue(vuex、vue-router)
-  - snabbdob :heavy_check_mark:
-  - vue源码学习 :heavy_check_mark: :clock10:
-  - vuex源码学习
-  - vue-router源码学习 :heavy_check_mark: :clock10:
 - React(redux、mobx、react-router)
 - Angular
 - 小程序(mpx)
 - TypeScript
   - Ts重构axios
+- Taro开发
 - SSR(服务端渲染)
 ### 后端
 - NodeJs(koa2、nestJs) :clock10:
 - Go :ghost:
+- Rust
+- Pythone
 ### 其它
 - 前端性能优化
   - 极客时间《全链路性能优化》 :clock10:
