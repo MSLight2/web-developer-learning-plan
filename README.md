@@ -32,10 +32,15 @@
 - HTML5 新标签 :heavy_check_mark:
 - CSS 属性 [CSS 参考](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference)
 - CSS动画
+- SVG
 - Canvas :ghost:
 - WebGL(three.js) :ghost:
 ### JS/TS
-- Vue 源码学习 :heavy_check_mark: :clock10:
+- Vue 源码学习
+  - snabbdom源码学习 :heavy_check_mark:
+  - vue源码学习 :clock10:
+  - vuex源码学习
+  - vue-router源码学习 :clock10:
 - Vue Router 源码学习 :heavy_check_mark: :clock10:
 - Vuex 源码学习
 - React
