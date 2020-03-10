@@ -64,114 +64,98 @@
 - initGlobalAPI()
   - Vue.config =
     {
-      // merge策略配置
-      optionMergeStrategies: Object.create(null),
-
-      // 是否禁止警告
-      silent: false,
-
-      // 启动时显示生产模式提示消息
-      productionTip: process.env.NODE_ENV !== 'production',
-
-      // devtools是否开启
-      devtools: process.env.NODE_ENV !== 'production',
-
-      // 是否录制信息
-      performance: false,
-
-      // 观察错误的处理程序
-      errorHandler: null,
-
-      // 观察警告的处理程序
-      warnHandler: null,
-
-      // 忽略某些自定义元素
-      ignoredElements: [],
-
-      // v-on自定义按键key的别名
-      keyCodes: Object.create(null),
-
-      // 检查组件标签是否是保留标签。
-      isReservedTag: no,
-
-      // 检查是否是保留属性
-      isReservedAttr: no,
-
-      // 检查tag是否是未知元素,依赖于平台
-      isUnknownElement: no,
-
-      // 获取元素命名空间
-      getTagNamespace: noop,
       
-      // 解析平台的特别标签，转化为真实标签
-      parsePlatformTagName: identity,
+      optionMergeStrategies: Object.create(null), // merge策略配置
 
-      // 检查是否必须使用属性绑定属性,依赖于平台
-      mustUseProp: no,
+      silent: false, // 是否禁止警告
 
-      // 异步执行更新，用于Vue的视图测试工具，如果设置为false，则将显著降低性能
-      async: true,
+      productionTip: process.env.NODE_ENV !== 'production', // 启动时显示生产模式提示消息
 
-      // 因遗留原因暴露
-      _lifecycleHooks: LIFECYCLE_HOOKS
+      devtools: process.env.NODE_ENV !== 'production', // devtools是否开启
+
+      performance: false, // 是否录制信息
+
+      errorHandler: null, // 观察错误的处理程序
+
+      warnHandler: null, // 观察警告的处理程序
+
+      ignoredElements: [], // 忽略某些自定义元素
+
+      keyCodes: Object.create(null), // v-on自定义按键key的别名
+
+      isReservedTag: no, // 检查组件标签是否是保留标签。
+
+      isReservedAttr: no, // 检查是否是保留属性
+
+      isUnknownElement: no, // 检查tag是否是未知元素,依赖于平台
+      
+      getTagNamespace: noop, // 获取元素命名空间
+      
+      parsePlatformTagName: identity, // 解析平台的特别标签，转化为真实标签
+
+      mustUseProp: no, // 检查是否必须使用属性绑定属性,依赖于平台
+
+      async: true, // 异步执行更新，用于Vue的视图测试工具，如果设置为false，则将显著降低性能
+
+      _lifecycleHooks: LIFECYCLE_HOOKS // 因遗留原因暴露
     }
-    - Vue.util = {
-      warn,
-      extend,
-      mergeOptions,
-      defineReactive
-    }
-    - Vue.set = set
-    - Vue.delete = del
-    - Vue.nextTick = nextTick
-    - Vue.observable // 2.6 explicit observable API
-    - Vue.options = Object.create(null)
-      ```
-      Vue.options的初始化
-      ASSET_TYPES = [
-        'component',
-        'directive',
-        'filter'
-      ]
-      ASSET_TYPES.forEach(type => {
-        Vue.options[type + 's'] = Object.create(null)
-      })
-      extend(Vue.options.components, builtInComponents)
-      ---->
-      Vue.options = {
-        components: {
-          KeepAlive
-        },
-        directives: {},
-        filters: {},
-        _base = Vue
-      }
-      ```
-    - initUse --> Vue.use = function(...)
-    - initMixin --> Vue.mixin = function(...)
-    - initExtend
-      - Vue.extend = function(...)
-      - Vue.cid = 0
-    - initAssetRegisters 生命周期初始化
-      ```
-      LIFECYCLE_HOOKS = [
-        'beforeCreate',
-        'created',
-        'beforeMount',
-        'mounted',
-        'beforeUpdate',
-        'updated',
-        'beforeDestroy',
-        'destroyed',
-        'activated',
-        'deactivated',
-        'errorCaptured',
-        'serverPrefetch'
-      ]
-      Vue.beforeCreate = function(...)
-      Vue.created = function(...)
-      ...
+  - Vue.util = {
+    warn,
+    extend,
+    mergeOptions,
+    defineReactive
+  }
+  - Vue.set = set
+  - Vue.delete = del
+  - Vue.nextTick = nextTick
+  - Vue.observable // 2.6 explicit observable API
+  - Vue.options = Object.create(null)
     ```
+    Vue.options的初始化
+    ASSET_TYPES = [
+      'component',
+      'directive',
+      'filter'
+    ]
+    ASSET_TYPES.forEach(type => {
+      Vue.options[type + 's'] = Object.create(null)
+    })
+    extend(Vue.options.components, builtInComponents)
+    ---->
+    Vue.options = {
+      components: {
+        KeepAlive
+      },
+      directives: {},
+      filters: {},
+      _base = Vue
+    }
+    ```
+  - initUse --> Vue.use = function(...)
+  - initMixin --> Vue.mixin = function(...)
+  - initExtend
+    - Vue.extend = function(...)
+    - Vue.cid = 0
+  - initAssetRegisters 生命周期初始化
+  ```
+  LIFECYCLE_HOOKS = [
+    'beforeCreate',
+    'created',
+    'beforeMount',
+    'mounted',
+    'beforeUpdate',
+    'updated',
+    'beforeDestroy',
+    'destroyed',
+    'activated',
+    'deactivated',
+    'errorCaptured',
+    'serverPrefetch'
+  ]
+  Vue.beforeCreate = function(...)
+  Vue.created = function(...)
+  ...
+  ```
 - Vue.version = '__VERSION__'
 - wen/runtime/index.js
   ```
