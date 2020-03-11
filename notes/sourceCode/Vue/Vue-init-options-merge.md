@@ -154,7 +154,7 @@ function mergeField (key) {
 // 注意stats是可以用户自定义的。通过Vue.config.optionMergeStrategies定义合并策略
 const strats = config.optionMergeStrategies
 ```
-> 如果`strats[key]`访问不到，则使用默认合并侧率
+> 如果`strats[key]`访问不到，则使用默认合并策略
 
 **1、默认合并策略**
 ```
@@ -358,6 +358,7 @@ strats.computed = function (
 }
 ```
 通过代码可以看出，合并很简单，当父组件没有时，则返回子组件的；当父子间有时，会混合到一个空对象`ret`中；当父子组件都有时，子组件会把父组件覆盖掉。
+
 **8、provide合并策略**
 ```
 strats.provide = mergeDataOrFn
