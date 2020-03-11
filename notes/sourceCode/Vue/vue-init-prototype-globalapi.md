@@ -64,7 +64,7 @@
 - initGlobalAPI()
   - Vue.config =
     {
-      
+
       optionMergeStrategies: Object.create(null), // merge策略配置
 
       silent: false, // 是否禁止警告
@@ -156,7 +156,7 @@
   Vue.created = function(...)
   ...
   ```
-- Vue.version = '__VERSION__'
+- Vue.version = ' __VERSION __ '
 - wen/runtime/index.js
   ```
   // 添加平台相关的配置
@@ -186,3 +186,5 @@
   ```
 - web/entry-runtime-with-compiler.js
   - Vue.compile = compileToFunctions // 添加Vue编译器
+
+》PS: Vue 2.6.10
