@@ -1,6 +1,6 @@
 ### Vue的初始化工作（Vue原型和全局API）
 #### Vue构造函数
-```
+```js
   function Vue (options) {
     if (process.env.NODE_ENV !== 'production' &&
       !(this instanceof Vue)
@@ -110,7 +110,7 @@
   - Vue.nextTick = nextTick
   - Vue.observable // 2.6 explicit observable API
   - Vue.options = Object.create(null)
-    ```
+    ```js
     Vue.options的初始化
     ASSET_TYPES = [
       'component',
@@ -121,7 +121,7 @@
       Vue.options[type + 's'] = Object.create(null)
     })
     extend(Vue.options.components, builtInComponents)
-    ---->
+    // ---->
     Vue.options = {
       components: {
         KeepAlive
@@ -137,7 +137,7 @@
     - Vue.extend = function(...)
     - Vue.cid = 0
   - initAssetRegisters 生命周期初始化
-  ```
+  ```js
   LIFECYCLE_HOOKS = [
     'beforeCreate',
     'created',
@@ -158,7 +158,7 @@
   ```
 - Vue.version = ' __VERSION __ '
 - wen/runtime/index.js
-  ```
+  ```js
   // 添加平台相关的配置
   Vue.config.mustUseProp = mustUseProp
   Vue.config.isReservedTag = isReservedTag

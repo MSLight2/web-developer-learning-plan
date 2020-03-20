@@ -1,6 +1,6 @@
 ### Vue的初始化工作（options合并）
 #### Vue构造函数执行this._init(options)
-```
+```js
 先看看Vue的基本使用
 var vm = new Vue({
   el: '#app',
@@ -14,7 +14,7 @@ var vm = new Vue({
 还记得`_init()`在哪里吗？初始化原型时有看到，在在`initMixin()`方法里(`Vue.prototype._init`)，`initMixin()`在`core/instance/init.js`,
 
 #### `new Vue`时`_init()`做了一系列的初始化工作
-```
+```js
   // a uid
   vm._uid = uid++ // 生成每个实例对应的uid，不重复
   // 一个标记，用于避免在做响应式时被观测
@@ -54,7 +54,7 @@ var vm = new Vue({
   callHook(vm, 'created')
 ```
 #### 实例初始化之options合并阶段：mergeOptions()
-```
+```js
 vm.$options = mergeOptions(
   // 解析构造函数的options Tip:需结合Vue.extend()理解，这里只是Vue.options
   resolveConstructorOptions(vm.constructor),
@@ -85,7 +85,7 @@ Vue.options = {
 }
 ```
 `mergeOptions()`在`core/util/options.js`
-```
+```js
 /*
  *在顶部例子的代码环境下
  *parent: Vue.options
@@ -145,7 +145,7 @@ export function mergeOptions (
 }
 ```
 #### options合并阶段之key的合并策略
-```
+```js
 function mergeField (key) {
   const strat = strats[key] || defaultStrat
   options[key] = strat(parent[key], child[key], vm, key)
@@ -157,7 +157,7 @@ const strats = config.optionMergeStrategies
 > 如果`strats[key]`访问不到，则使用默认合并策略
 
 **1、默认合并策略**
-```
+```js
 // 很简单不解释
 const defaultStrat = function (parentVal: any, childVal: any): any {
   return childVal === undefined
@@ -166,7 +166,7 @@ const defaultStrat = function (parentVal: any, childVal: any): any {
 }
 ```
 **2、el、propsData合并策略**
-```
+```js
 if (process.env.NODE_ENV !== 'production') {
   strats.el = strats.propsData = function (parent, child, vm, key) {
     if (!vm) {
@@ -182,7 +182,7 @@ if (process.env.NODE_ENV !== 'production') {
 使用的是默认合并策略， 且el，和propsData只能在`new`操作符是使用。
 
 **3、data合并策略**
-```
+```js
 strats.data = function (
   parentVal: any,
   childVal: any,
@@ -212,7 +212,7 @@ strats.data = function (
 > 为什么要处理成一个函数呢？应为通过函数能返回一个处理数据对象的一个副本，可以避免组件间相互影响
 
 **4、生命周期的合并策略**
-```
+```js
 LIFECYCLE_HOOKS.forEach(hook => {
   strats[hook] = mergeHook
 })
@@ -244,7 +244,7 @@ function dedupeHooks (hooks) {
 ```
 可以看到生命周期方法最后会被合并成一个数组，通过`dedupeHooks`的处理，
 当执行生命周期函数时，父组件的生命周期方法的执行会优先与子组件的生命周期方法
-```
+```js
 mounted: [
   function () {
     console.log('parent mounted~')
@@ -257,7 +257,7 @@ mounted: [
 
 **5、ASSET_TYPES合并策略**
 `ASSET_TYPES`即：`component、directive、filter`
-```
+```js
 function mergeAssets (
   parentVal: ?Object,
   childVal: ?Object,
@@ -279,7 +279,7 @@ ASSET_TYPES.forEach(function (type) {
 ```
 可以看到合并前会以`parentVal`为原型创建一个`res`对象，之后再根据`childVal`是否有值进行合并。
 同过`Object.create`为原型创建对象，可以让我们不用显式地注册组件就能够使用一些组件（例如：内置组件）的原因
-```
+```js
 // 以component为例
 components: {
   // 原型
@@ -293,7 +293,7 @@ components: {
 }
 ```
 **6、watch的合并策略**
-```
+```js
 strats.watch = function (
   parentVal: ?Object,
   childVal: ?Object,
@@ -327,7 +327,7 @@ strats.watch = function (
 }
 ```
 应为`Firefox`存在原生的`watch`说以要做处理。可以看到最终合并的watch对象里的key值，有可能是一个函数数组，也可能是一个函数。列入：
-```
+```js
 watch: {
   test: function () {...}
   test2: [
@@ -337,7 +337,7 @@ watch: {
 }
 ```
 **7、props、methods、inject、computed合并策略**
-```
+```js
 strats.props =
 strats.methods =
 strats.inject =
@@ -360,7 +360,7 @@ strats.computed = function (
 通过代码可以看出，合并很简单，当父组件没有时，则返回子组件的；当父子间有时，会混合到一个空对象`ret`中；当父子组件都有时，子组件会把父组件覆盖掉。
 
 **8、provide合并策略**
-```
+```js
 strats.provide = mergeDataOrFn
 ```
 `provide`合并策略就一句，可以看出可`data`合并策略相同
@@ -368,7 +368,7 @@ strats.provide = mergeDataOrFn
 > 最后以上没有处理的key的合并策略都使用默认合并策略，即`defaultStrat`
 
 **9、mixins、extends实现**
-```
+```js
 // 在mergeOptions下有段代码
 // 记得_base在哪里吗？在initGlobalAPI初始化全局时 Vue.options._base = Vue
 if (!child._base) {

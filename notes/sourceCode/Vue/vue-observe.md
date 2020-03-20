@@ -2,7 +2,7 @@
 > 入口：`core/instance/state.js --> initState() --> observe()`
 
 **1、core/observer/index.js：observe工厂**
-```
+```js
 /**
  * 为传入的值尝试创建一个Observer实例，如果观测成功则返回实例，
  * 如果这个值已经观测过，则直接返回这个值的Observer实例
@@ -34,7 +34,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 }
 ```
 **1-1、Observer类**
-```
+```js
 export class Observer {
   value: any;
   dep: Dep;
@@ -44,10 +44,10 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
-    // 在观测的对象上定义一个‘__ob__’属性，且值是当前Observer实例
+    // 在观测的对象上定义一个'__ob__'属性，且值是当前Observer实例
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
-      // 判读是否为数组，是数组则对数组进行观测，判断是否有‘__proto__’属性
+      // 判读是否为数组，是数组则对数组进行观测，判断是否有'__proto__'属性
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -85,7 +85,7 @@ export class Observer {
 
 **1-2、Vued对数组的拦截（Vue变异方法的实现）**
 > 原理：原型链的查找以及属性的覆盖
-```
+```js
 // 思路：
 // 以数组构造函数的原型创建一个对象，所以arrayMethods原型指向数组构造函数的原型，
 // 即使arrayMethods拥有和数组一样的全部方法。
@@ -138,7 +138,7 @@ methodsToPatch.forEach(function (method) {
 > defineReactive方法将数据对象的属性转换为访问器属性，即重写对象的`get/set`
 > 
 > 这个方法是Vue响应式系统的关键方法。
-```
+```js
 export function defineReactive (
   obj: Object,
   key: string,

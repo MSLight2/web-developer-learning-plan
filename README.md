@@ -11,7 +11,7 @@
 
 ## 计算机基础
 ### 操作系统
-- 计算机组成原理
+- 计算机
   - 《计算机组成原理》
 - Linux系统基本操作
   - Linux私房菜
@@ -41,9 +41,6 @@
   - vue源码学习 :clock10:
   - vuex源码学习
   - vue-router源码学习 :clock10:
-- Vue Router 源码学习 :heavy_check_mark: :clock10:
-- Vuex 源码学习
-- React
 - 基础
   - es5、es6继承
   - call apply、bind、JSON.stringify、JSON.Parse、Promise、async await实现
@@ -59,14 +56,12 @@
 - Angular
 - 小程序(mpx)
 - TypeScript
-  - Ts重构axios
 - Taro开发
 - SSR(服务端渲染)
 ### 后端
 - NodeJs(koa2、nestJs) :clock10:
 - Go :ghost:
 - Rust
-- Pythone
 ### 其它
 - 前端性能优化
   - 极客时间《全链路性能优化》 :clock10:

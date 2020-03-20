@@ -1,6 +1,6 @@
 ### Vue的初始化工作（进入初始化）
 **initLifecycle**
-```
+```js
 vm.$parent = parent
 vm.$root = parent ? parent.$root : vm
 
@@ -17,7 +17,7 @@ vm._isBeingDestroyed = false
 定义一些与生命周期相关的属性
 
 **initEvents**
-```
+```js
 vm._events = Object.create(null)
 vm._hasHookEvent = false
 // init parent attached events
@@ -27,7 +27,7 @@ if (listeners) {
 }
 ```
 **initRender**
-```
+```js
 vm._vnode = null // the root of the child tree
 vm._staticTrees = null // v-once cached trees
 vm.$slots = resolveSlots(options._renderChildren, renderContext)
@@ -42,7 +42,7 @@ vm.$listeners
 调用生命周期函数
 
 **initState**
-```
+```js
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
