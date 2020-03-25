@@ -71,10 +71,10 @@ Function.prototype.callFun = function (thisArg) {
   if (typeof this !== 'function') throw new Error('TypeError: ' + this + 'must be a function.')
   var argList = []
   thisArg = thisArg ? Object(thisArg) : window
-  var len = arguments.length
 
   // 理论上不使用push更好，因为push内部还会有层循环
   // 可以这样写：argList[i] = arguments[i + 1]
+  var len = arguments.length
   for (var i = 0; i < len; i++) {
     argList.push(arguments[i + 1])
   }
@@ -155,14 +155,115 @@ Function.prototype.bindFun2 = function (thisArg) {
 // Polyfill
 Function.prototype.bind = Function.prototype.bind || function bindPolyfill () { ... }
 ```
+> PS: 以上`bind`版本的实现还没实现`bound`的`name`和`length`属性。
+> 可以使用`Object.defineProperties`实现或参照`es5-shim`[源码](https://github.com/es-shims/es5-shim/blob/master/es5-shim.js#L201-L335)
+
 #### new实现
+```js
+/**
+  1.令 ref 为解释执行 NewExpression 的结果 .
+  2.令 constructor 为 GetValue(ref).
+  3.如果 Type(constructor) is not Object ，抛出一个 TypeError 异常 .
+  4.如果 constructor 没有实现 [[Construct]] 内置方法 ，抛出一个 TypeError 异常 .
+  5.返回调用 constructor 的 [[Construct]] 内置方法的结果 , 传入按无参数传入参数列表 ( 就是一个空的参数列表 ).
+    产生式 MemberExpression : new MemberExpression Arguments 按照下面的过程执行 :
+    5.1、令 ref 为解释执行 MemberExpression 的结果 .
+    5.2、令 constructor 为 GetValue(ref).
+    5.3、令 argList 为解释执行 Arguments 的结果 , 产生一个由参数值构成的内部列表类型 (11.2.4).
+    5.4、如果 Type(constructor) is not Object ，抛出一个 TypeError 异常 .
+    5.5、如果 constructor 没有实现 [[Construct]] 内置方法，抛出一个 TypeError 异常 .
+    5.6、返回以 argList 为参数调用 constructor 的 [[Construct]] 内置方法的结果。
+
+  MDN: new 关键字会进行如下操作
+  1、创建一个空的简单JavaScript对象（即{}）；
+  2、链接该对象（即设置该对象的构造函数）到另一个对象 ；
+  3、将步骤1新创建的对象作为this的上下文 ；
+  4、如果该函数没有返回对象，则返回this。
+ */
+ function newOperator () {
+   var ref = {}
+   var ctor = arguments[0]
+   if (typeof ctor !== 'function') {
+     throw new Error ('TypeError: Type(constructor) is not Object')
+   }
+   var argList = Array.prototype.slice.call(arguments, 1)
+   ref.__proto__ = ctor.prototype
+   var result = ctor.apply(ref, argList)
+   if (
+     result &&
+     result !== null &&
+     (typeof result === 'function' || typeof result === 'object')
+   ) {
+     return result
+   }
+   return ref
+ }
+```
+#### 多维数组转换一维数组
+- 使用`concat`和`apply`结合
+```js
+var arr = [1,[2,3],4,[5,6]]
+console.log([].concat.apply([], arr)) // [1, 2, 3, 4, 5, 6]
+```
+> 缺点：超过二维数组不行
+
+- 使用es6`flat`
+```js
+var arr = [1,[2,3],4,[5,6]]
+console.log(arr.flat()) // [1,2,3,4,5,6]
+```
+
+- 模拟实现flat
+```js
+var arr = [1,[2,3],4,[5,6, [7,8,[9,10]]]]
+/**
+ * @param arr 展开的数组
+ * @param depth 展开的深度
+ * @param start 展开的其实索引位置，默认0
+ */
+function _flatten (arr, depth, start) {
+  var target = new Array()
+  _FlattenIntoArray(target, arr, depth, start)
+  return target
+}
+function _FlattenIntoArray (target, arrArg, depth, start) {
+  var targetIndex = start || 0
+  var sourceIndex = 0
+  var sourceLen = arrArg.length
+  var IsArray = Array.isArray || function isArray (val) {
+    return Object.prototype.toString.call(val) === '[object Array]'
+  }
+  while (sourceIndex < sourceLen) {
+    var key = String(sourceIndex)
+    if (key in arrArg) {
+      var val = arrArg[key]
+      var shouldFlatten = false
+      // 传递大于0的值，这说明需要深度展开
+      if (depth > 0) {
+        shouldFlatten = IsArray(val)
+      }
+      if (shouldFlatten) {
+        targetIndex = _FlattenIntoArray(target, val, depth - 1, targetIndex)
+      } else {
+        target[targetIndex] = val
+        targetIndex += 1
+      }
+    }
+    sourceIndex += 1
+  }
+  return targetIndex
+}
+
+// 使用
+var arr = [1,[2,3],4,[5,6]]
+console.log(_flatten(arr, 1)) // [1,2,3,4,5,6]
+```
+
+#### 柯里化函数
+#### js深拷贝
 #### 实现JSON.parse
 #### es5和es6对于继承的实现
 #### Promise实现
 #### async await实现
-#### 多维数组转换一维数组
-#### 柯里化函数
-#### es5、es6中class继承实现
 #### 执行上下文和作用域
 #### cookie、sessionStorage和localStorage
-#### js深拷贝

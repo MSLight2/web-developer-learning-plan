@@ -44,6 +44,7 @@
 - 基础
   - es5、es6继承
   - call apply、bind、JSON.stringify、JSON.Parse、Promise、async await实现
+  - underscore源码
 #### 书籍
 - 《JS高级程序设计》 :heavy_check_mark:
 - 《你所不知道的JavaScript上卷》 :heavy_check_mark:
