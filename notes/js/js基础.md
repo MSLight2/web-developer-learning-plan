@@ -215,7 +215,6 @@ console.log(arr.flat()) // [1,2,3,4,5,6]
 
 - 模拟实现flat
 ```js
-var arr = [1,[2,3],4,[5,6, [7,8,[9,10]]]]
 /**
  * @param arr 展开的数组
  * @param depth 展开的深度
@@ -257,6 +256,8 @@ function _FlattenIntoArray (target, arrArg, depth, start) {
 // 使用
 var arr = [1,[2,3],4,[5,6]]
 console.log(_flatten(arr, 1)) // [1,2,3,4,5,6]
+arr = [1,[2,3],4,[5,6, [7,8,[9,10]]]]
+console.log(_flatten(arr, 3)) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
 #### 柯里化函数
