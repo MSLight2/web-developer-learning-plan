@@ -218,11 +218,10 @@ console.log(arr.flat()) // [1,2,3,4,5,6]
 /**
  * @param arr 展开的数组
  * @param depth 展开的深度
- * @param start 展开的其实索引位置，默认0
  */
-function _flatten (arr, depth, start) {
+function _flatten (arr, depth) {
   var target = new Array()
-  _FlattenIntoArray(target, arr, depth, start)
+  _FlattenIntoArray(target, arr, depth, 0)
   return target
 }
 function _FlattenIntoArray (target, arrArg, depth, start) {
