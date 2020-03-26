@@ -207,11 +207,18 @@ console.log([].concat.apply([], arr)) // [1, 2, 3, 4, 5, 6]
 ```
 > 缺点：超过二维数组不行
 
+- 使用`concat`和`toString`结合
+```js
+console.log([].concat(arr.toString().split(','))) // ["1", "2", "3", "4", "5", "6"]
+```
+> 缺点：每一项值都是字符串，之后还需处理。
+
 - 使用es6`flat`
 ```js
 var arr = [1,[2,3],4,[5,6]]
 console.log(arr.flat()) // [1,2,3,4,5,6]
 ```
+> 缺点：兼容性（现在基本不存在了[手动狗头]）
 
 - 模拟实现flat
 ```js
@@ -260,10 +267,160 @@ console.log(_flatten(arr, 3)) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
 #### 柯里化函数
+- 函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别
+在于，当函数被调用时，返回的函数还需要设置一些传入的参数（就是将一个接受多个参数的函数转化为接受单一参数的函数的技术）
+```js
+// 基本示例
+function curry(fn){
+  var args = Array.prototype.slice.call(arguments, 1)
+  return function(){
+    var innerArgs = Array.prototype.slice.call(arguments)
+    var finalArgs = args.concat(innerArgs)
+    return fn.apply(null, finalArgs)
+  }
+}
+// 用法
+function curry (fn) {
+  // fn.length 返回 fn 函数定义中形式参数的数量
+  var fnArg = fn.length
+  return function () {
+    var innerArgs = Array.prototype.slice.call(arguments)
+    if (innerArgs.length >= fnArg) {
+      // 实参数量满足形参的情况
+      fn.call(null, innerArgs)
+    } else {
+      // 实参数量少于形参的情况
+      return function () {
+        var finalArgs = Array.prototype.slice.call(arguments)
+        fn.call(null, innerArgs.concat(finalArgs))
+      }
+    }
+  }
+}
+const check = curry(function (what, x) {
+  return x.match(what);
+})
+const matchPhone = check(phoneRegExp) // check('/^1[0-9]{10}/g')
+const matchEmail = check(emailRegExp) // check('/^(https|http):\/\/)+.+/g')
+matchPhone('13511111111')
+matchEmail('www123@qq.com')
+
+// 一道经典面试题: add(1)(2)(3)
+function add() {
+  var firstArgs = Array.prototype.slice.call(arguments)
+  var sum = function() {
+    firstArgs.concat(Array.prototype.slice.call(arguments))
+    // 再次返回函数，用于持续调用
+    return sum
+  }
+  // 利用toString隐式转换的特性，当最后执行时隐式转换，并计算最终的值返回
+  sum.toString = function () {
+    return firstArgs.reduce(function (a, b) {
+      return a + b
+    })
+  }
+  return sum
+}
+```
+> PS: 函数柯里化可以使函数成为一种预加载函数
+
 #### js深拷贝
+- 使用`JSON.parse`和`JSON.stringify`
+```js
+var obj = {
+  a: 2,
+  b: 2,
+  c: { d: 4 }
+}
+var objCopy = JSON.parse(JSON.stringify(obj))
+objCopy.a = 6
+console.log(objCopy.a) // 6
+console.log(obj.a)     // 2
+```
+> 使用`JSON.parse`和`JSON.stringify`存在局限性；那就是你要转换的对象必须是合法`json`对象，不能拷贝`undefined、function`等
+
+- 完整深拷贝
+```js
+// 递归拷贝
+function deepCopy (origin) {
+  if (
+    Object.prototype.toString.call(origin) === '[object Array]' ||
+    Object.prototype.toString.call(origin) === '[object Object]'
+  ) {
+    let result = Array.isArray(origin) ? [] : {}
+    for (key in origin) {
+      if (Object.prototype.hasOwnProperty.call(origin, key)) {
+        let val = origin[key]
+        if (val && typeof val === 'object') {
+          result[key] = deepCopy(val)
+        } else {
+          result[key] = val
+        }
+      }
+    }
+    return result
+  }
+  return origin
+}
+```
+- 其它
+```js
+// 数组常用拷贝
+let arr = [1,[2,3],4,[5,6, [7,8,[9,10]]]]
+let copy = arr.slice()  // slice
+copy = [].concat(arr)   // concat
+[...copy] = arr         // ... es6扩展运算符
+copy = Array.from(arr)  // es6的Array.from
+```
+
 #### 实现JSON.parse
+```js
+if (typeof JSON.parse !== 'function') {
+  JSON.parse = function (strVal, reviver) {
+    let result
+    function walk (holder, key) {
+      var k
+      var v
+      var value = holder[key]
+      for (k in value) {
+        if (Object.prototype.hasOwnProperty.call(value, k)) {
+          v = walk(value, k)
+          if (val != undefined) {
+            value[k] = v
+          } else {
+            delete value[k]
+          }
+        }
+      }
+      return reviver.call(holder, key, value)
+    }
+    // TODO: 字符串解析，移除不合法字符
+    // 用于eval编译的字符串必须是安全的字符串。
+    result = eval("(" + strVal + ")")
+    return (typeof reviver === "function")
+      ? walk({"": result}, "")
+      : result
+  }
+}
+```
+参考链接：
+
+[正则可视化工具](https://regexper.com/)
+
+[统一码所有区段](https://www.fuhaoku.net/blocks)
+
+[JSON.parse 三种实现方式](https://github.com/youngwind/blog/issues/115)
+
+[JSON之父Douglas Crockford写的Ployfill](https://github.com/douglascrockford/JSON-js/blob/master/json2.js)
+
+[json3](https://github.com/bestiejs/json3/blob/master/lib/json3.js)
+
+附上`JSON.parse`源码(C语言): [JSON.parse](https://github.com/v8/v8/blob/master/src/json/json-parser.h)
+
 #### es5和es6对于继承的实现
 #### Promise实现
 #### async await实现
 #### 执行上下文和作用域
 #### cookie、sessionStorage和localStorage
+#### MVVM
+#### 工程化
