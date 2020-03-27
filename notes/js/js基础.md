@@ -396,9 +396,12 @@ if (typeof JSON.parse !== 'function') {
     }
 
     // TODO: 字符串解析，移除不合法字符
-    var rx_one = /^[\],:{}\s]*$/;
+    var rx_one = /^[\],:{}\s]*$/; // 匹配：] , : { } \s
+    // 匹配：\\ \/ \b \f \n \r \t \u(0-9a-fA-F)
     var rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
+    // 匹配： "xx" true false null 数值（类似：3, -3, 3.22, 3.22e+2, 3.22e5）
     var rx_three = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+    // 匹配：(: [) (, [)
     var rx_four = /(?:^|:|,)(?:\s*\[)+/g;
 
     if (
@@ -409,11 +412,12 @@ if (typeof JSON.parse !== 'function') {
           .replace(rx_four, "")
       )
     ) {
-    // 用于eval编译的字符串必须是安全的字符串。
-    result = eval("(" + strVal + ")")
-    return (typeof reviver === "function")
-      ? walk({"": result}, "")
-      : result
+      // 用于eval编译的字符串必须是安全的字符串。
+      result = eval("(" + strVal + ")")
+      return (typeof reviver === "function")
+        ? walk({"": result}, "")
+        : result
+    }
   }
 }
 ```
