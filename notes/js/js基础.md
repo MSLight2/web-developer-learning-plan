@@ -268,7 +268,7 @@ console.log(_flatten(arr, 3)) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 #### 柯里化函数
 - 函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别
-在于，当函数被调用时，返回的函数还需要设置一些传入的参数（就是将一个接受多个参数的函数转化为接受单一参数的函数的技术）
+在于，当函数被调用时，返回的函数还需要设置一些传入的参数（柯里化就是将一个接受多个参数的函数转化为接受单一参数的函数的技术）
 ```js
 // 基本示例
 function curry(fn){
@@ -300,10 +300,10 @@ function curry (fn) {
 const check = curry(function (what, x) {
   return x.match(what);
 })
-const matchPhone = check(phoneRegExp) // check('/^1[0-9]{10}/g')
-const matchEmail = check(emailRegExp) // check('/^(https|http):\/\/)+.+/g')
-matchPhone('13511111111')
-matchEmail('www123@qq.com')
+const checkPhone = check(phoneRegExp) // check('/^1[0-9]{10}/g')
+const checkEmail = check(emailRegExp) // check('/^(https|http):\/\/)+.+/g')
+checkPhone('13511111111')
+checkEmail('www123@qq.com')
 
 // 一道经典面试题: add(1)(2)(3)
 function add() {
@@ -337,7 +337,7 @@ objCopy.a = 6
 console.log(objCopy.a) // 6
 console.log(obj.a)     // 2
 ```
-> 使用`JSON.parse`和`JSON.stringify`存在局限性；那就是你要转换的对象必须是合法`json`对象，不能拷贝`undefined、function`等
+> 使用`JSON.parse`和`JSON.stringify`存在局限性；就是你要转换的对象必须是合法`json`对象，不能拷贝`undefined、function`等
 
 - 完整深拷贝
 ```js
@@ -394,7 +394,21 @@ if (typeof JSON.parse !== 'function') {
       }
       return reviver.call(holder, key, value)
     }
+
     // TODO: 字符串解析，移除不合法字符
+    var rx_one = /^[\],:{}\s]*$/;
+    var rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
+    var rx_three = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+    var rx_four = /(?:^|:|,)(?:\s*\[)+/g;
+
+    if (
+      rx_one.test(
+        strVal
+          .replace(rx_two, "@")
+          .replace(rx_three, "]")
+          .replace(rx_four, "")
+      )
+    ) {
     // 用于eval编译的字符串必须是安全的字符串。
     result = eval("(" + strVal + ")")
     return (typeof reviver === "function")
@@ -418,9 +432,48 @@ if (typeof JSON.parse !== 'function') {
 附上`JSON.parse`源码(C语言): [JSON.parse](https://github.com/v8/v8/blob/master/src/json/json-parser.h)
 
 #### es5和es6对于继承的实现
+- es5的继承
+- es6的继承
 #### Promise实现
 #### async await实现
 #### 执行上下文和作用域
 #### cookie、sessionStorage和localStorage
+- cookie
+- sessionStorage
+- localStorage
 #### MVVM
-#### 工程化
+什么是`MVVM`：即`Model-View-ViewModel`简称。
+
+参考：
+
+[廖雪峰 MVVM](https://www.liaoxuefeng.com/wiki/1022910821149312/1108898947791072)
+
+[基于Vue实现简易的MVVM](https://juejin.im/post/5cd8a7c1f265da037a3d0992#heading-0)
+
+#### 前端工程化
+- 为什么要前段工程化：
+  - 随着前端项目的日益复杂，前端已经不是以前的简简单单的页面，写个html、css、引入几个js的事情了，由webpage模式转化成webApp模式为主了。更为复杂和多样化
+  - 随着项目工程的复杂和多样化就会产生许多的问题：如`项目的维护，项目的协作、项目的风险把控、项目的开发质量、开发效率甚至于开发成本`等等问题
+  - 让前端的开发流程、技术、工具、经验等规范化、标准化。让前端开发能够"自成体系"，可以最大程度地提高前端工程师的开发效率，降低技术选型、前后端联调等带来的协调沟通成本。
+- 如何前端工程化：
+  
+  **前端工程化是一个很开发的话题，不同人有不同的理解。但最终目的不都是为了提高开发效率，保证代码质量，降低成本、提高风险可控性。个人认为可从`可控性`和`稳定性`两大方面理解**
+  - 可控性
+    对项目进行`组件化`、`模块化`、`规范化`、`自动化`使项目的可维护性和可用性高
+  - 稳定性
+    对项目进行测试（自动化测试：ui测试。逻辑测试，端到端测试、性能测试），自动化部署，持续集成；减少人为操作重复性的工作，提高项目的稳定性。
+#### js浮点精度问题
+- js浮点数遵循IEEE二进制浮点数算术标准（IEEE 754），所以在浮点计算时会产生误差；至于为什么会产生误差，可以了解下`IEEE 754`标准
+- 推荐使用js库：
+  [mathjs、](https://mathjs.org/docs/getting_started.html)
+  [decimal.js、](http://mikemcl.github.io/decimal.js/#)
+  [big.js](http://mikemcl.github.io/big.js/)
+- 一个GitHub上的项目: [number-precision](https://github.com/nefe/number-precision)
+- 知道小数点位数的前提下，手写个简单的转换方法
+  ```js
+  function calcFloat (num, digit) {
+    let times = Math.pow(10, digit)
+    return Math.round(num * times) / times
+  }
+  ```
+> 计算思路：先放大数字，使之能够精确表示，计算之后再缩小数字，得到实际值
