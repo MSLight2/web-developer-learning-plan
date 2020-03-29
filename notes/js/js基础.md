@@ -1,4 +1,4 @@
-#### 模拟实现call，apply，bind
+### 模拟实现call，apply，bind
 [ECMAScript5.1中文版](http://yanhaijing.com/es5/#324)
 ```js
 // apply，call共同注意点：
@@ -158,7 +158,7 @@ Function.prototype.bind = Function.prototype.bind || function bindPolyfill () { 
 > PS: 以上`bind`版本的实现还没实现`bound`的`name`和`length`属性。
 > 可以使用`Object.defineProperties`实现或参照`es5-shim`[源码](https://github.com/es-shims/es5-shim/blob/master/es5-shim.js#L201-L335)
 
-#### new实现
+### new实现
 ```js
 /**
   1.令 ref 为解释执行 NewExpression 的结果 .
@@ -199,7 +199,7 @@ Function.prototype.bind = Function.prototype.bind || function bindPolyfill () { 
    return ref
  }
 ```
-#### 多维数组转换一维数组
+### 多维数组转换一维数组
 - 使用`concat`和`apply`结合
 ```js
 var arr = [1,[2,3],4,[5,6]]
@@ -266,7 +266,7 @@ arr = [1,[2,3],4,[5,6, [7,8,[9,10]]]]
 console.log(_flatten(arr, 3)) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
-#### 柯里化函数
+### 柯里化函数
 - 函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别
 在于，当函数被调用时，返回的函数还需要设置一些传入的参数（柯里化就是将一个接受多个参数的函数转化为接受单一参数的函数的技术）
 ```js
@@ -324,7 +324,7 @@ function add() {
 ```
 > PS: 函数柯里化可以使函数成为一种预加载函数
 
-#### js深拷贝
+### js深拷贝
 - 使用`JSON.parse`和`JSON.stringify`
 ```js
 var obj = {
@@ -373,7 +373,7 @@ copy = [].concat(arr)   // concat
 copy = Array.from(arr)  // es6的Array.from
 ```
 
-#### 实现JSON.parse
+### 实现JSON.parse
 ```js
 if (typeof JSON.parse !== 'function') {
   JSON.parse = function (strVal, reviver) {
@@ -435,17 +435,24 @@ if (typeof JSON.parse !== 'function') {
 
 附上`JSON.parse`源码(C语言): [JSON.parse](https://github.com/v8/v8/blob/master/src/json/json-parser.h)
 
-#### es5和es6对于继承的实现
+### es5和es6对于继承的实现
 - es5的继承
+  |继承|特性|实例|优点|缺点|
+  |----|----|----|----|----|
+  |借用构造函数  | 在子类型构造函数的内部调用超类型构造函数 | function SubType(){ //继承了 SuperType SuperType.call(this); }  | 可以在子类型构造函数中向超类型构造函数传递参数 | 方法都在构造函数中定义，因此函数复用就无从谈起。在超类型的原型中定义的方法，对子类型而言也是不可见|
+  |组合继承      | 是将原型链和借用构造函数的技术组合到一块，从而发挥二者之长的一种继承模式。其背后的思路是使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。 |SubType.prototype = new SuperType();| 避免了原型链的和借用构造函数的缺陷 | 无论什么情况下，都会调用两次超类型构造函数：一次是在创建子类型原型的时候，另一次是在子类型构造函数内部。 |
+  |原型式继承    |借助原型可以基于已有的对象创建新对象，同时还不必因此创建自定义类型。要求你必须有一个对象可以作为另一个对象的基础。ECMAScript 5 通过新增 Object.create()方法规范化了原型式继承|function object(o){ function F(){}; F.prototype = o; return new F(); }| 所有对象实例共享它所包含的属性和方法 | 原型属性会被所有实例共享；在创建子类型的实例时，不能向超类型的构造函数中传递参数。 |
+  |寄生式继承    |是与原型式继承紧密相关的一种思路；寄生式继承的思路与寄生构造函数和工厂模式类似，即创建一个仅用于封装继承过程的函数，该函数在内部以某种方式来增强对象，最后再像真地是它做了所有工作一样返回对象| function createAnother(original){var clone = object(original); clone.sayHi = function(){ alert("hi");};return clone; //返回这个对象} | 解决组合继承模式由于多次调用超类型构造函数而导致的低效率问题 | / |
+  |寄生组合式继承|即通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。其背后的基本思路是：不必为了指定子类型的原型而调用超类型的构造函数，我们所需要的无非就是超类型原型的一个副本而已。|function inheritPrototype(subType, superType){var prototype = object(superType.prototype); prototype.constructor = subType; subType.prototype = prototype; } |只调用了一次 SuperType 构造函数，并且因此避免了在 SubType.prototype 上面创建不必要的、多余的属性。与此同时，原型链还能保持不变；| / |
 - es6的继承
-#### Promise实现
-#### async await实现
-#### 执行上下文和作用域
-#### cookie、sessionStorage和localStorage
+### Promise实现
+### async await实现
+### 执行上下文和作用域
+### cookie、sessionStorage和localStorage
 - cookie
 - sessionStorage
 - localStorage
-#### MVVM
+### MVVM
 什么是`MVVM`：即`Model-View-ViewModel`简称。
 
 参考：
@@ -454,7 +461,7 @@ if (typeof JSON.parse !== 'function') {
 
 [基于Vue实现简易的MVVM](https://juejin.im/post/5cd8a7c1f265da037a3d0992#heading-0)
 
-#### 前端工程化
+### 前端工程化
 - 为什么要前段工程化：
   - 随着前端项目的日益复杂，前端已经不是以前的简简单单的页面，写个html、css、引入几个js的事情了，由webpage模式转化成webApp模式为主了。更为复杂和多样化
   - 随着项目工程的复杂和多样化就会产生许多的问题：如`项目的维护，项目的协作、项目的风险把控、项目的开发质量、开发效率甚至于开发成本`等等问题
@@ -466,7 +473,7 @@ if (typeof JSON.parse !== 'function') {
     对项目进行`组件化`、`模块化`、`规范化`、`自动化`使项目的可维护性和可用性高
   - 稳定性
     对项目进行测试（自动化测试：ui测试。逻辑测试，端到端测试、性能测试），自动化部署，持续集成；减少人为操作重复性的工作，提高项目的稳定性。
-#### js浮点精度问题
+### js浮点精度问题
 - js浮点数遵循IEEE二进制浮点数算术标准（IEEE 754），所以在浮点计算时会产生误差；至于为什么会产生误差，可以了解下`IEEE 754`标准
 - 推荐使用js库：
   [mathjs、](https://mathjs.org/docs/getting_started.html)
