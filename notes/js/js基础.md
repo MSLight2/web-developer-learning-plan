@@ -399,9 +399,9 @@ if (typeof JSON.parse !== 'function') {
     var rx_one = /^[\],:{}\s]*$/; // 匹配：] , : { } \s
     // 匹配：\\ \/ \b \f \n \r \t \u(0-9a-fA-F)
     var rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
-    // 匹配： "xx" true false null 数值（类似：3, -3, 3.22, 3.22e+2, 3.22e5）
+    // 匹配： "非(双引号 \ \n \r)" true false null 数值（类似：3, -3, 3.22, 3.22e+2, 3.22e5）
     var rx_three = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
-    // 匹配：(: [) (, [)
+    // 匹配：(: [) (,[)
     var rx_four = /(?:^|:|,)(?:\s*\[)+/g;
 
     if (
@@ -442,9 +442,13 @@ if (typeof JSON.parse !== 'function') {
   |借用构造函数  | 在子类型构造函数的内部调用超类型构造函数 | function SubType(){ //继承了 SuperType SuperType.call(this); }  | 可以在子类型构造函数中向超类型构造函数传递参数 | 方法都在构造函数中定义，因此函数复用就无从谈起。在超类型的原型中定义的方法，对子类型而言也是不可见|
   |组合继承      | 是将原型链和借用构造函数的技术组合到一块，从而发挥二者之长的一种继承模式。其背后的思路是使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。 |SubType.prototype = new SuperType();| 避免了原型链的和借用构造函数的缺陷 | 无论什么情况下，都会调用两次超类型构造函数：一次是在创建子类型原型的时候，另一次是在子类型构造函数内部。 |
   |原型式继承    |借助原型可以基于已有的对象创建新对象，同时还不必因此创建自定义类型。要求你必须有一个对象可以作为另一个对象的基础。ECMAScript 5 通过新增 Object.create()方法规范化了原型式继承|function object(o){ function F(){}; F.prototype = o; return new F(); }| 所有对象实例共享它所包含的属性和方法 | 原型属性会被所有实例共享；在创建子类型的实例时，不能向超类型的构造函数中传递参数。 |
-  |寄生式继承    |是与原型式继承紧密相关的一种思路；寄生式继承的思路与寄生构造函数和工厂模式类似，即创建一个仅用于封装继承过程的函数，该函数在内部以某种方式来增强对象，最后再像真地是它做了所有工作一样返回对象| function createAnother(original){var clone = object(original); clone.sayHi = function(){ alert("hi");};return clone; //返回这个对象} | 解决组合继承模式由于多次调用超类型构造函数而导致的低效率问题 | / |
-  |寄生组合式继承|即通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。其背后的基本思路是：不必为了指定子类型的原型而调用超类型的构造函数，我们所需要的无非就是超类型原型的一个副本而已。|function inheritPrototype(subType, superType){var prototype = object(superType.prototype); prototype.constructor = subType; subType.prototype = prototype; } |只调用了一次 SuperType 构造函数，并且因此避免了在 SubType.prototype 上面创建不必要的、多余的属性。与此同时，原型链还能保持不变；| / |
+  |寄生式继承    |是与原型式继承紧密相关的一种思路；寄生式继承的思路与寄生构造函数和工厂模式类似，即创建一个仅用于封装继承过程的函数，该函数在内部以某种方式来增强对象，最后再像真地是它做了所有工作一样返回对象| function createAnother(original){var clone = object(original); clone.sayHi = function(){ alert("hi");};return clone; //返回这个对象} | 解决组合继承模式由于多次调用超类型构造函数而导致的低效率问题 | 使用寄生式继承来为对象添加函数，会因为做不到函数复用而降低效率，这个与构造函数模式类似 |
+  |寄生组合式继承|即通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。其背后的基本思路是：不必为了指定子类型的原型而调用超类型的构造函数，我们所需要的无非就是超类型原型的一个副本而已。|function inheritPrototype(subType, superType){var prototype = object(superType.prototype); prototype.constructor = subType; subType.prototype = prototype; } |只调用了一次 SuperType 构造函数，并且因此避免了在 SubType.prototype 上面创建不必要的、多余的属性。与此同时，因此，原型链还能保持不变；寄生组合式继承被认为是引用类型最理想的继承范式| / |
 - es6的继承
+  es6的继承只是es5的语法糖。本质上也是原型链的继承
+  |继承|特性|
+  |----|----|
+  |es6继承|关键字`extend`|
 ### Promise实现
 ### async await实现
 ### 执行上下文和作用域

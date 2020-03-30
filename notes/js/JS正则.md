@@ -42,7 +42,7 @@
 #### 常用正则表达式
 - 手机号码：`/^1[3456789][0-9]{9}$/g`，`/^1[0-9]{10}/g`
 - 手机平台:
-  ```
+  ```js
   let UA = window.navigator.userAgent.toLowerCase()
   let isIOS = (/iphone|ipad|ipod|ios/.test(UA))
   let isAndriod = (UA.indexOf('android') > 0)
@@ -60,37 +60,4 @@
     .replace('.', '$#$').replace(/\./g, '')
     .replace('$#$', '.').replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3').(/^0{2,}/, '0')
   ```
-  更多...(后续收集填充)
-#### Vue源码模板编译模块的正则
-- 元素属性: ``` /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/ ```
-- Vue指令、事件绑定属性等：``` /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/ ```
-- html标签：`/a-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD/`
-```js
-const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
-const dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
-const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
-const qnameCapture = `((?:${ncname}\\:)?${ncname})`
-const startTagOpen = new RegExp(`^<${qnameCapture}`)
-const startTagClose = /^\s*(\/?)>/
-const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
-const doctype = /^<!DOCTYPE [^>]+>/i
-// #7298: escape - to avoid being passed as HTML comment when inlined in page
-const comment = /^<!\--/
-const conditionalComment = /^<!\[/
-
-// Special Elements (can contain anything)
-export const isPlainTextElement = makeMap('script,style,textarea', true)
-const reCache = {}
-
-const decodingMap = {
-  '&lt;': '<',
-  '&gt;': '>',
-  '&quot;': '"',
-  '&amp;': '&',
-  '&#10;': '\n',
-  '&#9;': '\t',
-  '&#39;': "'"
-}
-const encodedAttr = /&(?:lt|gt|quot|amp|#39);/g
-const encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#39|#10|#9);/g
-```
+  >更多...(后续收集填充)
