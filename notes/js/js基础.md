@@ -199,6 +199,7 @@ Function.prototype.bind = Function.prototype.bind || function bindPolyfill () { 
    return ref
  }
 ```
+### js实现map
 ### 多维数组转换一维数组
 - 使用`concat`和`apply`结合
 ```js
@@ -439,16 +440,34 @@ if (typeof JSON.parse !== 'function') {
 - es5的继承
   |继承|特性|实例|优点|缺点|
   |----|----|----|----|----|
-  |借用构造函数  | 在子类型构造函数的内部调用超类型构造函数 | function SubType(){ //继承了 SuperType SuperType.call(this); }  | 可以在子类型构造函数中向超类型构造函数传递参数 | 方法都在构造函数中定义，因此函数复用就无从谈起。在超类型的原型中定义的方法，对子类型而言也是不可见|
+  |借用构造函数  | 在子类型构造函数的内部调用超类型构造函数 | function SubType(){ SuperType.call(this); }  | 可以在子类型构造函数中向超类型构造函数传递参数 | 方法都在构造函数中定义，因此函数复用就无从谈起。在超类型的原型中定义的方法，对子类型而言也是不可见|
   |组合继承      | 是将原型链和借用构造函数的技术组合到一块，从而发挥二者之长的一种继承模式。其背后的思路是使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。 |SubType.prototype = new SuperType();| 避免了原型链的和借用构造函数的缺陷 | 无论什么情况下，都会调用两次超类型构造函数：一次是在创建子类型原型的时候，另一次是在子类型构造函数内部。 |
-  |原型式继承    |借助原型可以基于已有的对象创建新对象，同时还不必因此创建自定义类型。要求你必须有一个对象可以作为另一个对象的基础。ECMAScript 5 通过新增 Object.create()方法规范化了原型式继承|function object(o){ function F(){}; F.prototype = o; return new F(); }| 所有对象实例共享它所包含的属性和方法 | 原型属性会被所有实例共享；在创建子类型的实例时，不能向超类型的构造函数中传递参数。 |
-  |寄生式继承    |是与原型式继承紧密相关的一种思路；寄生式继承的思路与寄生构造函数和工厂模式类似，即创建一个仅用于封装继承过程的函数，该函数在内部以某种方式来增强对象，最后再像真地是它做了所有工作一样返回对象| function createAnother(original){var clone = object(original); clone.sayHi = function(){ alert("hi");};return clone; //返回这个对象} | 解决组合继承模式由于多次调用超类型构造函数而导致的低效率问题 | 使用寄生式继承来为对象添加函数，会因为做不到函数复用而降低效率，这个与构造函数模式类似 |
-  |寄生组合式继承|即通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。其背后的基本思路是：不必为了指定子类型的原型而调用超类型的构造函数，我们所需要的无非就是超类型原型的一个副本而已。|function inheritPrototype(subType, superType){var prototype = object(superType.prototype); prototype.constructor = subType; subType.prototype = prototype; } |只调用了一次 SuperType 构造函数，并且因此避免了在 SubType.prototype 上面创建不必要的、多余的属性。与此同时，因此，原型链还能保持不变；寄生组合式继承被认为是引用类型最理想的继承范式| / |
+  |原型式继承    |借助原型可以基于已有的对象创建新对象，同时还不必因此创建自定义类型。要求你必须有一个对象可以作为另一个对象的基础。ECMAScript 5 通过新增 Object.create()方法规范化了原型式继承|function object(o){<br> function F(){};<br> F.prototype = o;<br> return new F();<br> }| 所有对象实例共享它所包含的属性和方法 | 原型属性会被所有实例共享；在创建子类型的实例时，不能向超类型的构造函数中传递参数。 |
+  |寄生式继承    |是与原型式继承紧密相关的一种思路；寄生式继承的思路与寄生构造函数和工厂模式类似，即创建一个仅用于封装继承过程的函数，该函数在内部以某种方式来增强对象，最后再像真地是它做了所有工作一样返回对象| function createAnother(original){<br>var clone = object(original);<br>clone.sayHi = function(){ alert("hi")};<br>return clone; //返回这个对象<br>} | 解决组合继承模式由于多次调用超类型构造函数而导致的低效率问题 | 使用寄生式继承来为对象添加函数，会因为做不到函数复用而降低效率，这个与构造函数模式类似 |
+  |寄生组合式继承|即通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。其背后的基本思路是：不必为了指定子类型的原型而调用超类型的构造函数，我们所需要的无非就是超类型原型的一个副本而已。|function inheritPrototype(subType, superType){<br>var prototype = object(superType.prototype);<br> prototype.constructor = subType;<br> subType.prototype = prototype; <br>} |只调用了一次 SuperType 构造函数，并且因此避免了在 SubType.prototype 上面创建不必要的、多余的属性。与此同时，因此，原型链还能保持不变；寄生组合式继承被认为是引用类型最理想的继承范式| / |
 - es6的继承
-  es6的继承只是es5的语法糖。本质上也是原型链的继承
+  
+  es6的继承只是es5的语法糖，**本质上也是原型链的继承。**
   |继承|特性|
   |----|----|
-  |es6继承|关键字`extend`|
+  |es6继承|1、关键字`extends`。<br/>2、子类必须在`constructor`方法中调用`super`方法，否则新建实例时会报错。<br>3、ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（`Parent.apply(this)`）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this。<br>4、子类的构造函数中，只有调用`super`之后，才可以使用`this`关键字，否则会报错。<br>5、父类的静态方法，也会被子类继承。|
+  | | 6、`Object.getPrototypeOf`方法可以用来从子类上获取父类。可以使用这个方法判断，一个类是否继承了另一个类<br>7、`extends`关键字不仅可以用来继承类，还可以用来继承原生的构造函数，而ES5不可以继承原生的构造函数<br>8、注意，继承`Object`的子类，有一个行为差异：无法通过`super`方法向父类`Object`传参。这是因为 ES6 改变了`Object`构造函数的行为，一旦发现`Object`方法不是通过`new Object()`这种形式调用，ES6 规定Object构造函数会忽略参数。|
+  |`super`关键字|**super这个关键字，既可以当作函数使用，也可以当作对象使用。**<br>一、作为函数调用<br>`this`指向的不是父类，而是子类，且`super()`只能用在子类的构造函数之中<br>二、`super`作为对象时<br>`super`指向父类的原型对象，所以定义在父类实例上的方法或属性，是无法通过`super`调用的。<br><br>ES6 规定，在子类普通方法中通过`super`调用父类的方法时，方法内部的`this`指向当前的子类实例。<br>在子类的静态方法中通过super调用父类的方法时，方法内部的this指向当前的子类，而不是子类的实例。|
+  |类的 `prototype` 属性和`__proto__`属性|1、子类的`__proto__`属性，表示构造函数的继承，总是指向父类。<br>2、子类`prototype`属性的`__proto__`属性，表示方法的继承，总是指向父类的`prototype`属性|
+  |实例的 `__proto__` 属性|子类实例的`__proto__`属性的`__proto__`属性，指向父类实例的`__proto__`属性。|
+- es5中构造函数和es6类的对应关系
+  |es5构造函数|es6类
+  |----|----|
+  |ES5 的构造函数| ES6 的类的构造方法(`constructor`)|
+  |`prototype`对象的`constructor`属性，直接指向"类"的本身，这与 ES5 的行为是一致的|
+  |与 ES5 一样，实例的属性除非显式定义在其本身（即定义在`this`对象上），否则都是定义在原型上（即定义在`class`上）|
+  |与 ES5 一样，类的所有实例共享一个原型对象|
+  |es5可以枚举|类的内部所有定义的方法，都是不可枚举的|
+  |es5构造函数可以作为函数调用|类必须使用`new`调用|
+  |默认不是严格模式|类和模块的内部，默认就是严格模式|
+  |构造函数存在变量提升|类不存在变量提升|
+  |构造函数的`this`默认是`undefined`，因为`this`是运行是确认的。而es6则是必须`new`调用|类的方法内部如果含有`this`，它默认指向类的实例。<br><br>注意：单独使用方法会改变this指向。<br>例如：`let { fn } = A`（假如类A里面有个方法叫`fn`，`fn`里面有使用`this`）<br>此时this指向会改变。可以`在构造方法中绑定this，即fn = fn.bind(this)`或者使用`箭头函数（fn = () => {}）`|
+  |es5使用`instanceof`判断是否是构造函数的实例。例如： `this instanceof A`|es6有`new.target`实例化(`new`)时,`new.target`的值就是当前的类（例如：`A --> new A; new.target === A // true`）<br>注意：子类继承父类时，`new.target`会返回子类|
 ### Promise实现
 ### async await实现
 ### 执行上下文和作用域
