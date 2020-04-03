@@ -199,7 +199,7 @@ Function.prototype.bind = Function.prototype.bind || function bindPolyfill () { 
    return ref
  }
 ```
-### js实现map
+
 ### 多维数组转换一维数组
 - 使用`concat`和`apply`结合
 ```js
@@ -473,8 +473,21 @@ if (typeof JSON.parse !== 'function') {
 ### 执行上下文和作用域
 ### cookie、sessionStorage和localStorage
 - cookie
+  - 客户端用于存储会话信息的。该标准要求服务器对任意 HTTP 请求发送 Set-Cookie HTTP 头作为响应的一部分，其中包含会话信息
+  - 限制
+    - IE7 和之后版本每个域名最多 50 个
+    - Firefox 限制每个域最多 50 个 cookie
+    - Safari 和 Chrome 对于每个域的 cookie 数量限制没有硬性规定
+    - cookie 的尺寸一般在`4KB`左右
+    - cookie由：名称(name)、值(value)、域(domain)、路径(path)、失效时间(expires)、安全标志(secure...)构成
 - sessionStorage
+  - sessionStorage 对象存储特定于某个会话的数据，也就是该数据只保持到浏览器关闭。会在浏览器关闭后消失。
+  - sessionStorage 中的数据可以跨越页面刷新而存在
 - localStorage
+  - 要访问同一个 localStorage 对象，页面必须来自同一个域名（子域名无效），使用同一种协议，在同一个端口上（同源限制）
+  - 数据保留到通过 JavaScript 删除或者是用户清除浏览器缓存（用户不删除可以长期储存在本地）
+  
+> `sessionStorage和localStorage`限制：大多数桌面浏览器会设置每个来源 5MB 的限制，Chrome 和 Safari 对每个来源的限制是 2.5MB.而 iOS 版 Safari 和 Android 版 WebKit 的限制也是 2.5MB。IE8+和 Opera 对sessionStorage 的限制是 5MB
 ### MVVM
 什么是`MVVM`：即`Model-View-ViewModel`简称。
 
@@ -491,7 +504,7 @@ if (typeof JSON.parse !== 'function') {
   - 让前端的开发流程、技术、工具、经验等规范化、标准化。让前端开发能够"自成体系"，可以最大程度地提高前端工程师的开发效率，降低技术选型、前后端联调等带来的协调沟通成本。
 - 如何前端工程化：
   
-  **前端工程化是一个很开发的话题，不同人有不同的理解。但最终目的不都是为了提高开发效率，保证代码质量，降低成本、提高风险可控性。个人认为可从`可控性`和`稳定性`两大方面理解**
+  **前端工程化是一个很开发的话题，不同人有不同的理解。但最终目的不都是为了提高开发效率，保证代码质量，降低成本、提高风险可控性。开发-->上线-->维护**
   - 可控性
     对项目进行`组件化`、`模块化`、`规范化`、`自动化`使项目的可维护性和可用性高
   - 稳定性

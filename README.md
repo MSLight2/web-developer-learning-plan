@@ -24,6 +24,7 @@
   - PostgresSQL :ghost:
 - 编译原理
 ### 算法
+- 《数据结构和算法之美》 ---- 极客时间
 - 《算法-第4版》
 ### 设计模式
 - 《js设计模式》 :heavy_check_mark: **80%**
@@ -59,6 +60,7 @@
 - TypeScript
 - Taro开发
 - SSR(服务端渲染)
+### 前端测试
 ### 后端
 - NodeJs(koa2、nestJs) :clock10:
 - Go :ghost:

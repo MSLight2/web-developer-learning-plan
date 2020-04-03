@@ -102,9 +102,41 @@
     - 多个块级元素：display: inline-block; 父元素设置：text-align: center，或justify-content: center;
     - 单个块级元素：margin: 0 auto; 或justify-content: center;
 - 垂直居中
+  - 行内元素：
+    - 单行：padding-bottom和padding-top相等、line-height居中、flex
+    - 多行：padding-bottom和padding-top相等、父元素table-cell，后使用vertical-align居中、flex
+    - 以上适用父级容器拥有确定高度的元素，如果上述方法都不起作用则：在垂直居中的元素上添加伪元素，设置伪元素的高等于父级容器的高，然后为文本添加 vertical-align: middle;
+  - 块元素：flex、设置高度和父元素一致、position: absolute和margin负值、position: absolute和transform:translateY(-50%)
 - 水平垂直居中
+  - flex
+  - position: absolute和margin负值
+  - position: absolute和transform:translate(-50%, -50%)（如果会模糊则父级元素设置transform-style: preserve-3d;）
 ### iPhoneX适配
+- `safa area`内：`viewport-fit:contain`
+- viewport-fit=cover之后，Web中会新增四个常量
+  - `viewport-fit=cover` + `padding: constant(safe-area-inset-top) constant(safe-area-inset-right) constant(safe-area-inset-bottom) constant(safe-area-inset-left);`
+- 媒体查询
+  ```css
+  // iphoneX
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3){
+  }
+  //iphone Xs Max
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio:3) {
+  }
+  //iphone XR
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio:2) {
+  }
+  ```
 ### link和@import
+- 两种方式都是可以加载css文件，但link还可以用于加载其他文件，而不仅仅是css文件
+- link引用的CSS会同时被加载，而@import引用的CSS会等到页面全部被下载完再加载（link可以并行加载,@import不行）。会引发闪烁问题
+- @import需要使用在IE5以上的浏览器（现在基本也看做没兼容问题了），link无兼容性问题
+- link可是用js控制dom添加，@import不行
+- link方式的样式权重高于@import的权重
+
+> css不会注册DOM树的解析，但会阻塞DOM树的渲染
+> css加载会阻塞后面js语句的执行
+
 ### css实现两栏布局（圣杯）原理是什么；css实现田字布局，水平居中
 - 圣杯布局
   - 圣杯布局就是就是左右两边大小固定不变，中间宽度自适应。
@@ -122,6 +154,68 @@
     4. grid布局
 
 ### CSS规范
-  - BEM
-  - CSS in js
-  - sass、less、styles
+  - 命名规范
+    1. BEM
+      - 什么是BEM：BEM是css的一种命名规范；即：块（block）、元素（element）、修饰符（modifier）
+      - 命名约定的模式如下：
+        ```css
+        .block{}
+        .block__element{}
+        .block--modifier{}
+        ```
+        - .block 代表了更高级别的抽象或组件。
+        - .block__element 代表.block的后代，.block里的元素，用于形成一个完整的.block的整体
+        - .block--modifier代表.block的不同状态或不同版本
+    2. OOCSS：面向对象的css
+       - 原则1：独立的结构和样式；原则2：独立的容器和内容
+       - 创建OOCSS
+         - 创建一个组件库
+         - 独立的容器和内容，并且避免样式来依赖位置
+         - 独立的结构和样式
+         - 使用类名为扩展基本对象
+         - 坚持以语义类来命名类名
+       - OOCSS缺点
+         - 样式(CSS)和结构(HTML)藕合太紧
+         - 创建了数千行CSS，但有可能这些CSS永远不会被使用
+         - OOCSS适合真正的大型网站开发，小项目不易看见成效
+         - 需巧妙运用，运用不好会使CSS更难维护
+         - 需要写说明文档，便于维护
+       - OOCSS优点
+         - 减少CSS代码
+         - 具有清洁的HTML标记，有语义的类名，逻辑性强的层次关系
+         - 语义标记，有助于SEO
+         - 更好的页面优化，更快的加载时间（因为有很多组件重用）
+         - 可扩展的标记和CSS样式，有更多的组件可以放到库中，而不影响其他的组件著作权归作者所有。
+         - 能轻松构造新的页面布局，或制作新的页面风格
+        
+        参考：[OOCSS——概念篇](https://www.w3cplus.com/css/oocss-concept)
+    3. SMACSS：[smacss.com/](http://smacss.com/)
+       - SMACSS定义了五种样式类型
+         - Base (基本)
+         - Layout（布局）
+         - Module (模块)
+         - State (状态) 
+         - Theme (皮肤)
+    4. AMCSS：AMCSS是Attribute Modules for CSS的缩写，表示借助HTML属性来进行CSS相关开发
+       - 属性值得灵活性，相当于通过属性值来增加命名空间，减少全局名称空间，以便更好的将css模块化 
+  - CSS in js: 用 JavaScript 在写 CSS
+    - 解决的一些痛点
+      - 全局污染
+      - 命名混乱
+      - 难以复用
+      - 维护性差
+      - 冗余代码
+      - 兼容问题
+      - 组件化，方便开发维护和测试
+      - JavaScript 和 CSS 可以方便的共享变量和方法
+    - 不足之处
+      - 没有统一的业界标准
+      - 代码可读性差 
+      - 学习成本高
+      - 运行时消耗更高
+    - 热门库：[styled-components](https://github.com/styled-components/styled-components)
+  - CSS Modules：所有的类名和动画名称默认都有各自的作用域的CSS文件。
+    - CSS Modules不是一个官方的规范，也不是浏览器的一种机制，它是一种构建步骤中对CSS类名和选择器限定作用域的一种方式。
+    - CSS Modules集中在同一个地方，只应用于该组件
+    - 能结局传统css的很多问题，一些css的书写规范不再是必须的了，当然懂得要更多，学习成本也就更高
+    - 和webpack、react配合使用更加；vue-cli3.0也支持。
