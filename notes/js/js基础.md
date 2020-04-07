@@ -424,7 +424,7 @@ if (typeof JSON.parse !== 'function') {
 ```
 参考链接：
 
-[正则可视化工具](https://regexper.com/)
+工具：[正则可视化工具](https://regexper.com/)
 
 [统一码所有区段](https://www.fuhaoku.net/blocks)
 

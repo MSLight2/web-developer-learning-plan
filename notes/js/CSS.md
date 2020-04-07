@@ -134,7 +134,7 @@
 - link可是用js控制dom添加，@import不行
 - link方式的样式权重高于@import的权重
 
-> css不会注册DOM树的解析，但会阻塞DOM树的渲染
+> css不会阻塞DOM树的解析，但会阻塞DOM树的渲染
 > css加载会阻塞后面js语句的执行
 
 ### css实现两栏布局（圣杯）原理是什么；css实现田字布局，水平居中

@@ -1,7 +1,9 @@
 ## 网络学习相关笔记
 ### JSONP
 - JSONP
+  - JSONP 不是一种数据交换的格式，而是解决跨域问题的一种方案。
 - JSONP原理
+  - 原理就是利用`script`标签能跨域的特性，实现数据交互
 - 如何实现一个JSONP
 - JSONP安全问题
 - JSONP和CORS的对比
