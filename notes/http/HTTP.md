@@ -31,6 +31,7 @@
   jsonp请求的流程图
 
   ![](https://github.com/MSLight2/web-developer-learning-plan/blob/master/notes/img/jsonp.png)
+  [图片来源](https://segmentfault.com/a/1190000009773724)
 - JSONP安全问题
   - 因为callback后接的是字符串，是拼接的，所以callback参数可能会恶意添加标签（如script），造成XSS漏洞
   - JSON劫持

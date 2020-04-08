@@ -471,6 +471,11 @@ if (typeof JSON.parse !== 'function') {
 ### Promise实现
 ### async await实现
 ### 执行上下文和作用域
+  - 执行上下文：`this`
+  - 作用域
+    - 全局作用域：`window`、`global`、其它
+    - 函数作用域
+    - 快作用域：`for`、`with`、`try/catch`(catch内部)`、let、``const`
 ### cookie、sessionStorage和localStorage
 - cookie
   - 客户端用于存储会话信息的。该标准要求服务器对任意 HTTP 请求发送 Set-Cookie HTTP 头作为响应的一部分，其中包含会话信息
