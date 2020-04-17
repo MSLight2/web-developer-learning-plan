@@ -267,12 +267,14 @@ arr = [1,[2,3],4,[5,6, [7,8,[9,10]]]]
 console.log(_flatten(arr, 3)) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
+### 数组、对象去重
+
 ### 柯里化函数
 - 函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别
 在于，当函数被调用时，返回的函数还需要设置一些传入的参数（柯里化就是将一个接受多个参数的函数转化为接受单一参数的函数的技术）
 ```js
 // 基本示例
-function curry(fn){
+function curry (fn) {
   var args = Array.prototype.slice.call(arguments, 1)
   return function(){
     var innerArgs = Array.prototype.slice.call(arguments)

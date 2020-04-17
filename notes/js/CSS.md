@@ -131,10 +131,9 @@
 - 两种方式都是可以加载css文件，但link还可以用于加载其他文件，而不仅仅是css文件
 - link引用的CSS会同时被加载，而@import引用的CSS会等到页面全部被下载完再加载（link可以并行加载,@import不行）。会引发闪烁问题
 - @import需要使用在IE5以上的浏览器（现在基本也看做没兼容问题了），link无兼容性问题
-- link可是用js控制dom添加，@import不行
+- link标签可以用js控制dom方式添加，@import不行
 - link方式的样式权重高于@import的权重
 
-> css不会阻塞DOM树的解析，但会阻塞DOM树的渲染
 > css加载会阻塞后面js语句的执行
 
 ### css实现两栏布局（圣杯）原理是什么；css实现田字布局，水平居中
