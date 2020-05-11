@@ -200,6 +200,22 @@ Function.prototype.bind = Function.prototype.bind || function bindPolyfill () { 
  }
 ```
 
+### 实现instanceof
+```js
+function instanceofOperator (lVal, rVal) {
+  let rref = rVal.prototype
+  lVal = lVal.__proto__
+  if (typeof rVal !== 'function') {
+    throw new Error("Right-hand side of 'instanceofOperator' is not an object")
+  }
+  while (true) {
+    if (lVal === null) return false
+    if (lVal === rref) return true
+    lVal = lVal.__proto__
+  }
+}
+```
+
 ### 多维数组转换一维数组
 - 使用`concat`和`apply`结合
 ```js
@@ -219,7 +235,7 @@ console.log([].concat(arr.toString().split(','))) // ["1", "2", "3", "4", "5", "
 var arr = [1,[2,3],4,[5,6]]
 console.log(arr.flat()) // [1,2,3,4,5,6]
 ```
-> 缺点：兼容性（现在基本不存在了[手动狗头]）
+> 缺点：兼容性（IE？不存在的[狗头]）
 
 - 模拟实现flat
 ```js
@@ -268,6 +284,62 @@ console.log(_flatten(arr, 3)) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
 ### 数组、对象去重
+数组去重：
+```js
+// 1、利用es6中的set去重
+function rmArrayRepeat (arr) {
+  return [...new Set(arr)]
+}
+// 2、利用indexOf去重
+function rmArrayRepeat (arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error('Type Error: arr is not an Array')
+  }
+  var result = []
+  for (var i = 0; i < arr.length; i++) {
+    if (arr.indexOf(arr[i]) === -1) { // indexOf也可以换成includes
+      result.push(arr[i])
+    }
+  }
+  return result
+}
+// 3、利用sort去重
+function rmArrayRepeat (arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error('Type Error: arr is not an Array')
+  }
+  arr = arr.sort()
+  var result = [arr[0]]
+  for (var i = 1; i < arr.length; i++) {
+    if (arr[i] !== arr[i-1]) {
+      result.push(arr[i])
+    }
+  }
+  return result
+}
+// 4、利用splice去重
+function rmArrayRepeat (arr) {
+  for (var i=0; i<arr.length; i++) {
+    for (var j=i+1; j<arr.length; j++) {
+      if (arr[i] === arr[j]) {
+        arr.splice(j,1)
+        j--
+      }
+    }
+  }
+}
+// 5、利用filter去重
+function rmArrayRepeat (arr) {
+  return arr.filter((item, index, arr) => {
+    //当前元素，在原始数组中的第一个索引===当前索引值，则返回当前元素
+    return arr.indexOf(item, 0) === index
+  })
+}
+// 6、利用reduce去重
+function rmArrayRepeat (arr) {
+  return arr.reduce((prev,cur) => prev.includes(cur) ? prev : [...prev,cur],[])
+}
+```
 
 ### 柯里化函数
 - 函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别
@@ -370,6 +442,7 @@ function deepCopy (origin) {
 ```js
 // 数组常用拷贝
 let arr = [1,[2,3],4,[5,6, [7,8,[9,10]]]]
+
 let copy = arr.slice()  // slice
 copy = [].concat(arr)   // concat
 [...copy] = arr         // ... es6扩展运算符
