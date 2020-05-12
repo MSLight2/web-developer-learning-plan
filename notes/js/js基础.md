@@ -288,7 +288,8 @@ console.log(_flatten(arr, 3)) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```js
 // 1、利用es6中的set去重
 function rmArrayRepeat (arr) {
-  return [...new Set(arr)]
+  return Array.from(new Set(arr))
+  // return [...new Set(arr)]
 }
 // 2、利用indexOf去重
 function rmArrayRepeat (arr) {
