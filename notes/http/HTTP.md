@@ -1,4 +1,3 @@
-## 网络学习相关笔记
 ### JSONP
 - JSONP
   - JSONP 不是一种数据交换的格式，而是解决跨域问题的一种方案。
@@ -51,7 +50,7 @@
   - Nginx反向代理
   - `postMessage`
   - `document.domain`
-### HTTP缓存
+
 ### XSS（跨站脚本攻击）
 - 什么是XSS攻击：XSS跨站脚本攻击，将一段脚本内容放到目标网站的目标浏览器上解释执行
 - XSS防御方案
