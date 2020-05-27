@@ -1,3 +1,5 @@
+### HTTP
+什么是HTTP： HTTP（HyperText Transfer Protocol，超文本传输协议`(超文本转移协议)`）
 ### TCP/IP
 >TCP/IP 是互联网相关的各类协议族的总称
 - **TCP/IP 协议族按层次分别分为以下 4 层**：
@@ -16,10 +18,14 @@
 - **TCP三次握手**
   - 用 TCP 协议把数据包送出去后，TCP不会对传送后的情况置之不理，它一定会向对方确认是否成功送达
   - 握手过程中使用了 TCP 的标志（flag） —— SYN（synchronize） 和ACK（acknowledgement）（同步和确认标志）
-    - 发送端首先发送一个带 SYN 标志的数据包给对方。
-    - 接收端收到后，回传一个带有 SYN/ACK 标志的数据包以示传达确认信息。
-    - 最后，发送端再回传一个带 ACK 标志的数据包，代表“握手”结束
+    - 客户端首先发送一个带 SYN 标志的数据包给对方。
+    - 服务端收到后，回传一个带有 SYN/ACK 标志的数据包以示传达确认信息。
+    - 最后，客户端再回传一个带 ACK 标志的数据包，代表“握手”结束
 - **TCP四次挥手**
+  - 客户端发送FIN标记的数据包给服务端，请求断开连接
+  - 服务端接收到FIN标记的数据包后，回传给ACK标记的包表示传达确认信息
+  - 服务端再发送FIN标记的数据包给客户端，表示要断开连接
+  - 接收到服务端FIN标记的数据包，客户端回传ACK标记的数据包表示确认。断开连接。
 - **URI和URL**
    -  URI：统一资源标识符，URL：统一资源定位符；URL是URI的子集
    -  RFC标准：协议方案名://登录信息/服务器地址(ip/域名)/带层次的文件路径/查询字符串/片段标识符(#/,可选)
@@ -231,13 +237,13 @@
   - Last-Modified和If-Modified-Since
   - Etag和If-None-Match
 
-- Last-Modified和Etag区别
+- 有Last-Modified为什么还要Etag
   - Etag 主要为了解决 Last-Modified 无法解决的一些问题
     1. 一些文件也许会周期性的更改，但是他的内容并不改变(仅仅改变的修改时间)，这个时候我们并不希望客户端认为这个文件被修改了，而重新GET
     2. 某些文件修改非常频繁，比如在秒以下的时间内进行修改，(比方说1s内修改了N次)，If-Modified-Since能检查到的粒度是s级的，这种修改无法判断(或者说UNIX记录MTIME只能精确到秒)
     3. 某些服务器不能精确的得到文件的最后修改时间
 
-Last-Modified,Etag,Expires 三个同时使用时。先判断 Expire ，然后发送 Http 请求，服务器先判断 last-modified ，再判断 Etag ，必须都没有过期，才能返回 304 响应
+> Last-Modified,Etag,Expires 三个同时使用时。先判断 Expire ，然后发送 Http 请求，服务器先判断 last-modified ，再判断 Etag ，必须都没有过期，才能返回 304 响应
 
 ### 确保web安全的HTTPS
 - **HTTP的缺点**
