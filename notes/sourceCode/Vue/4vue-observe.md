@@ -1,4 +1,4 @@
-### Vue的响应式原理
+## Vue的响应式原理
 > 入口：`core/instance/state.js --> initState() --> observe()`
 
 **1、core/observer/index.js：observe工厂**
@@ -203,10 +203,91 @@ export function defineReactive (
       }
       // 如果新值是对象，这对值进行继续观测
       childOb = !shallow && observe(newVal)
-      // 通知观察者进行更新
+      // 通知观察者进行更新（运行依赖框中收集的观察者--所有观察者均为异步更新）
       dep.notify()
     }
   })
 }
 ```
-通过以上的处理，我们的观测的数据对象就是响应式的了。
+通过以上的处理，在data里定义的数据就是就具备响应式的条件了。
+但是只是仅仅定义了对象属性的`get/set`，还没有观察者对数据进行观测。被观察的对象也还没收集到依赖。
+
+## 响应式属性依赖的收集以及触发
+
+## 计算属性实现原理
+```js
+// 源码
+export function initState (vm: Component) {
+  // ...
+  if (opts.computed) initComputed(vm, opts.computed)
+  // ...
+}
+
+function initComputed (vm: Component, computed: Object) {
+  // $flow-disable-line
+  const watchers = vm._computedWatchers = Object.create(null)
+  // computed properties are just getters during SSR
+  const isSSR = isServerRendering()
+
+  for (const key in computed) {
+     // ...
+    if (!isSSR) {
+      // create internal watcher for the computed property.
+      watchers[key] = new Watcher(
+        vm,
+        getter || noop,
+        noop,
+        computedWatcherOptions
+      )
+    }
+
+    // component-defined computed properties are already defined on the
+    // component prototype. We only need to define computed properties defined
+    // at instantiation here.
+    if (!(key in vm)) {
+      defineComputed(vm, key, userDef)
+    } else if (process.env.NODE_ENV !== 'production') {
+      // ...
+    }
+  }
+}
+
+export function defineComputed (
+  target: any,
+  key: string,
+  userDef: Object | Function
+) {
+  // 省略其它代码..
+  sharedPropertyDefinition.get = shouldCache
+    ? createComputedGetter(key)
+    : createGetterInvoker(userDef)
+  sharedPropertyDefinition.set = noop
+  // 省略其它代码..
+  Object.defineProperty(target, key, sharedPropertyDefinition)
+}
+
+function createComputedGetter (key) {
+  return function computedGetter () {
+    const watcher = this._computedWatchers && this._computedWatchers[key]
+    if (watcher) {
+      if (watcher.dirty) {
+        watcher.evaluate()
+      }
+      if (Dep.target) {
+        watcher.depend()
+      }
+      return watcher.value
+    }
+  }
+}
+```
+通过以上源码可以得知：在vue实例初始化时，`initState`通过调用`initComputed`为定义的每个计算属性创建一个观察者实例对象，并把观察者对象存入Vue实例的`_computedWatchers`属性中。我们把这个观察者称为：**计算器属性观察者**。之后再通过`defineComputed`方法为计算属性添加`get/set`属性。
+
+通过`createComputedGetter`可以看到，在计算属性获取值时，即`get`时，会触发计算属性的`get`方法。`get`方法会取出它自身的观察者对象，在调用`watcher.evaluate()`和`watcher.depend()`，最后返回值。
+
+#### watcher.evaluate()的调用
+在计算属性获取值时，**计算器属性观察者**会调用这个方法后，此时`Dep.target`就是当前**计算器属性观察者**实例对象，所以**计算属性所依赖的响应式字段**会收集**计算器属性观察者**依赖；**计算器属性观察者**也会和它所观测的响应式字段相关联。
+#### watcher.depend()的调用
+渲染时，计算器属性观察者会调用`depend`这个方法时，`Dep.target`必然是**渲染函数观察者**，所以会使计算器属性所依赖的响应式字段收集**渲染函数观察者**依赖。此时计算器属性所依赖的响应式字段的`Dep`中就收集了“计算器属性观察者”和“渲染函数观察者”。又因为计算器属性观察者是惰性求值的，因此当计算属性依赖的值发生变化时，会通知观察者更新；但计算器属性观察者是不会触发更新的，触发更新的是渲染函数观察者。所以会导致重新渲染，最终更新视图。
+
+> 综上所述：计算器属性的实现就是为计算属性字段添加**计算器属性观察者**，之后通过计算器属性观察者让它依赖的响应式字段收集渲染函数观察者，从而实现计算属性的缓存。计算器属性观察者就是在这中间起到一个桥梁的作用。
