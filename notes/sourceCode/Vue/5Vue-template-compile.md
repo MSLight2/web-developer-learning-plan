@@ -47,7 +47,7 @@ export function createCompilerCreator (baseCompile: Function): Function {
 
 // compiler/to-function.js
 export function createCompileToFunctionFn (compile: Function): Function {
-  // 缓存编译内容，防止重复编译，提高性能
+  // 缓存编译结果，防止重复编译，提高性能
   const cache = Object.create(null)
 
   return function compileToFunctions () {
