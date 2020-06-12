@@ -62,3 +62,5 @@ export function createCompileToFunctionFn (compile: Function): Function {
 >`createCompiler`返回的就是编译器，它本身就是编译器创建者。
 
 > **在创建编译器的时候传递了基本编译器选项参数，当真正使用编译器编译模板时，依然可以传递编译器选项，并且新的选项和基本选项会以合适的方式融合或覆盖**
+
+### 2.html-parse(HTML模板解析)
