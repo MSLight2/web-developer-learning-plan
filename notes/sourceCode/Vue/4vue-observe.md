@@ -671,7 +671,7 @@ export function queueWatcher (watcher: Watcher) {
 }
 ```
 
-记下来看队列（`flushSchedulerQueue`）是怎么执行的
+接下来看队列（`flushSchedulerQueue`）是怎么执行的
 ```js
 function flushSchedulerQueue () {
   currentFlushTimestamp = getNow()
@@ -723,6 +723,7 @@ function flushSchedulerQueue () {
   const activatedQueue = activatedChildren.slice()
   const updatedQueue = queue.slice()
 
+  // 清空队列
   resetSchedulerState()
 
   // call component updated and activated hooks

@@ -32,7 +32,7 @@
 ### 源码/基础
 - Vue 源码学习
   - snabbdom源码学习 :heavy_check_mark:
-  - vue源码学习 :clock10:
+  - vue源码学习 :clock10: → [源码分析笔记](https://github.com/MSLight2/web-developer-learning-plan/tree/master/notes/sourceCode/Vue)
   - vuex源码学习
   - vue-router源码学习 :clock10:
 - React redux 源码学习
