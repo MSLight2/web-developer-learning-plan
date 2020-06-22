@@ -815,3 +815,148 @@ function createComputedGetter (key) {
 > 综上所述：计算器属性的实现就是为计算属性字段添加**计算器属性观察者**，之后通过计算器属性观察者让它依赖的响应式字段收集渲染函数观察者，从而实现计算属性的缓存。计算器属性观察者就是在这中间起到一个桥梁的作用。
 
 ## Vue.watch/set/delete实现原理
+### Vue中watch实现
+源码所在位置：`core/instance/state.js`
+```js
+// 初始化组件中定义的 watch
+function initWatch (vm: Component, watch: Object) {
+  for (const key in watch) {
+    const handler = watch[key]
+    if (Array.isArray(handler)) {
+      for (let i = 0; i < handler.length; i++) {
+        createWatcher(vm, key, handler[i])
+      }
+    } else {
+      createWatcher(vm, key, handler)
+    }
+  }
+}
+
+// 创建watch方法，通过调用vue实例的 $watch 实现
+function createWatcher (
+  vm: Component,
+  expOrFn: string | Function,
+  handler: any,
+  options?: Object
+) {
+  if (isPlainObject(handler)) {
+    options = handler
+    handler = handler.handler
+  }
+  if (typeof handler === 'string') {
+    handler = vm[handler]
+  }
+  return vm.$watch(expOrFn, handler, options)
+}
+
+Vue.prototype.$watch = function (
+  expOrFn: string | Function,
+  cb: any,
+  options?: Object
+): Function {
+  const vm: Component = this
+  if (isPlainObject(cb)) {
+    return createWatcher(vm, expOrFn, cb, options)
+  }
+  options = options || {}
+  options.user = true
+  // 创建一个观察者实例对象
+  const watcher = new Watcher(vm, expOrFn, cb, options)
+  if (options.immediate) {
+    try {
+      cb.call(vm, watcher.value)
+    } catch (error) {
+      handleError(error, vm, `callback for immediate watcher "${watcher.expression}"`)
+    }
+  }
+  return function unwatchFn () {
+    watcher.teardown()
+  }
+}
+```
+从代码可以看出，不管初始化组件的watch，还是手动watch属性，都是调用组件实例的`$watch`。$watch的实现就是创建一个watch的观察者实例对象，这个观察者实例对象不是惰性求值的，即lazy的值为false，所以在初始化的时候回触发观察属性的getter属性，从而使被观察的属性收集到观察者依赖。最后返回一个函数，这个函数里调用了观察者的`teardown`方法，这个方法会移除观察这者和属性的关联以及使观察者失活。即调用`$watch`返回函数就可以取消对属性的观察。
+
+### Vue中set/delete实现
+
+在`Vue`官方文档中对Vue.set是这样说明的：**向响应式对象中添加一个 property，并确保这个新 property 同样是响应式的，且触发视图更新。**
+
+通过vue响应式源码可以知道：`Vue` 数据响应系统的原理的核心是通过 `Object.defineProperty` 函数将数据对象的属性转换为访问器属性，且只在初始化的时候进行了转换，也就是说在后期代码运行的过程中，如果没有特殊处理，往响应式对象中添加的新属性是不具有响应式的。Vue.set就是用来解决这个问题的。
+
+源码说在位置`$watch`上两行，如下：
+```js
+Vue.prototype.$set = set
+Vue.prototype.$delete = del
+```
+
+其中set和del在`core/observer/index.js`
+```js
+export function set (target: Array<any> | Object, key: any, val: any): any {
+  if (process.env.NODE_ENV !== 'production' &&
+    (isUndef(target) || isPrimitive(target))
+  ) {
+    warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
+  }
+  // 对数组进行处理，直接修改数组的值是不会触发响应的；如arr[0] = 5
+  // 而vue中的splice是变异方法，所以对数组的处理直接使用splice即可
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
+    target.length = Math.max(target.length, key)
+    target.splice(key, 1, val)
+    return val
+  }
+  // 若果是对象，且属性已经在对象上了，直接设置值即可。需注意属性不能在Object.prototype上
+  if (key in target && !(key in Object.prototype)) {
+    target[key] = val
+    return val
+  }
+  const ob = (target: any).__ob__
+  // 这个判断第一个条件说明不能在vue实例对象上添加属性，以防止属性覆盖问题
+  // 第二个条件说明不能在响应式根对象上添加新属性，因为响应式根对象是收集不到依赖的，也就没有触发的意义了
+  if (target._isVue || (ob && ob.vmCount)) {
+    process.env.NODE_ENV !== 'production' && warn(
+      'Avoid adding reactive properties to a Vue instance or its root $data ' +
+      'at runtime - declare it upfront in the data option.'
+    )
+    return val
+  }
+  // 若果属性不再对象上，说明这个属性是新添加的，且添加属性的对象原本并具备响应式，直接赋值即可。
+  if (!ob) {
+    target[key] = val
+    return val
+  }
+  // 添加属性的对象原本是响应式，这转换为响应式属性，并且触发更新
+  defineReactive(ob.value, key, val)
+  ob.dep.notify()
+  return val
+}
+```
+
+Vue.delete的处理和set基本差不多，不同的就是使用`delete`删除属性而已。最后如果要删除的是响应式对象的上的属性，则触发更新即可。
+```js
+export function del (target: Array<any> | Object, key: any) {
+  if (process.env.NODE_ENV !== 'production' &&
+    (isUndef(target) || isPrimitive(target))
+  ) {
+    warn(`Cannot delete reactive property on undefined, null, or primitive value: ${(target: any)}`)
+  }
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
+    target.splice(key, 1)
+    return
+  }
+  const ob = (target: any).__ob__
+  if (target._isVue || (ob && ob.vmCount)) {
+    process.env.NODE_ENV !== 'production' && warn(
+      'Avoid deleting properties on a Vue instance or its root $data ' +
+      '- just set it to null.'
+    )
+    return
+  }
+  if (!hasOwn(target, key)) {
+    return
+  }
+  delete target[key]
+  if (!ob) {
+    return
+  }
+  ob.dep.notify()
+}
+```
