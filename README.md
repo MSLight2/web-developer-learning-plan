@@ -15,7 +15,7 @@
   - Linux私房菜
   - Linux兄弟连视频学习
 - 网络
-  - 《图解http》 :heavy_check_mark:
+  - 《图解http》 :heavy_check_mark: → [笔记](https://github.com/MSLight2/web-developer-learning-plan/blob/master/notes/http/%E5%9B%BE%E8%A7%A3HTTP.md)
 - 编译原理
 ### 算法
 - 《数据结构和算法之美》 ---- 极客时间
@@ -24,19 +24,20 @@
 ### HTML/CSS
 - 《CSS揭秘》:heavy_check_mark: **30%**
 - HTML5 新标签 :heavy_check_mark:
-- CSS 属性 [CSS 参考](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference)
+- CSS 属性 → [CSS 参考](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference)
 - CSS动画
 - SVG
 - Canvas :ghost:
 - WebGL(three.js) :ghost:
 ### 源码/基础
 - Vue 源码学习
-  - snabbdom源码学习 :heavy_check_mark:
-  - vue源码学习 :clock10: → [源码分析笔记](https://github.com/MSLight2/web-developer-learning-plan/tree/master/notes/sourceCode/Vue)
-  - vuex源码学习
-  - vue-router源码学习 :clock10:
-- React redux 源码学习
-- 基础
+  - snabbdom源码阅读 :heavy_check_mark: → [源码细读](https://juejin.im/post/5ddc7bd8e51d45233b0a39d4)
+  - vue源码阅读 :clock10: → [源码分析笔记](https://github.com/MSLight2/web-developer-learning-plan/tree/master/notes/sourceCode/Vue)
+  - vuex源码阅读
+  - vue-router源码阅读 :clock10:
+- React redux 源码阅读
+- webpack 源码阅读
+- 基础 → [笔记](https://github.com/MSLight2/web-developer-learning-plan/blob/master/notes/js/js%E5%9F%BA%E7%A1%80.md)
   - es5、es6继承
   - call apply、bind、JSON.stringify、JSON.Parse、Promise、async await实现
   - underscore源码
