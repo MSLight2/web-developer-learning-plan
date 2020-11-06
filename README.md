@@ -53,7 +53,7 @@
   - snabbdom源码阅读 :heavy_check_mark: → [源码细读](https://juejin.im/post/5ddc7bd8e51d45233b0a39d4)
   - vue源码阅读 :clock10: → [源码分析笔记](https://github.com/MSLight2/web-developer-learning-plan/tree/master/notes/sourceCode/Vue)
   - vuex源码阅读
-  - vue-router源码阅读 :clock10:
+  - vue-router源码阅读 :heavy_check_mark: → [源码阅读](https://github.com/MSLight2/web-developer-learning-plan/blob/master/notes/sourceCode/VueRouter/router-init.md)
 - React redux 源码阅读
 - webpack 源码阅读
 ### 前端测试
