@@ -20,7 +20,7 @@
 ### 算法
 - 《数据结构和算法之美》 ---- 极客时间
 ### 设计模式
-- 《js设计模式》 :heavy_check_mark: **80%**
+- 《js设计模式》 :heavy_check_mark: [笔记](https://github.com/MSLight2/web-developer-learning-plan/blob/master/notes/js/JS%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.md)
 ### HTML/CSS
 - 《CSS揭秘》:heavy_check_mark: **30%**
 - HTML5 新标签 :heavy_check_mark:
@@ -56,6 +56,8 @@
   - vue-router源码阅读 :heavy_check_mark: → [源码阅读](https://github.com/MSLight2/web-developer-learning-plan/blob/master/notes/sourceCode/VueRouter/router-init.md)
 - React redux 源码阅读
 - webpack 源码阅读
+### 打造自己的组件库
+- TS + React + Jest(material)
 ### 前端测试
 - jest
 ### 后端
