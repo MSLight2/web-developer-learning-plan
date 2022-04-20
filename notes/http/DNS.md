@@ -15,3 +15,8 @@
 > A (Address) 记录是用来指定主机名（或域名）对应的IP地址记录。用户可以将该域名下的网站服务器指向到自己的web server上。同时也可以设置您域名的二级域名。
 > CNAME：别名记录。这种记录允许您将多个名字映射到另外一个域名。通常用于同时提供WWW和MAIL服务的计算机。例如，有一台计算机名为“host.mydomain.com”（A记录）。它同时提供WWW和MAIL服务，为了便于用户访问服务。服务商从方便维护的角度，一般也建议用户使用CNAME记录绑定域名的。如果主机使用了双线IP，显然使用CNAME也要方便一些。
 > TTL（Time To Live）：也就是设置这个DNS解析在Local DNS Server上面的过期时间。超过了这个过期时间，URL和IP的映射就会被删除，需要获取还要请求Name Server。
+
+#### 总结
+NS服务器是用来做URL与IP地址解析的，帮助用户找到要访问服务器的IP。从DNS服务器的结构来说大致分为三层：根域名服务器，顶级域名服务器，本地域名服务器。
+
+申请域名的供应商会提供Name Server作为DNS解析。从用户访问一个网站出发，经过浏览器，本地Host文件、Local DNS Server、Root DNS Server、顶级域名服务器（gTLD、ccTLD、New gTLD）、Name Server、GTM、CDN、Application Server。共经历了九个步骤。
