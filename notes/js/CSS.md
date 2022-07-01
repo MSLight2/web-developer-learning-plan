@@ -69,7 +69,7 @@
 ### z-index有什么需要注意的地方
 - 层叠顺序
   
-  `层叠上下文background/border` < `负z-index` < `block状态水平盒子` < `float浮动盒子` < `inline/inline-box的水平盒子` < `z-index:auto或看成z-index:0,不依赖z-index的层叠上下文` < `正z-index`
+  `层叠上下文` < `定位且负z-index` < `block状态水平盒子` < `float浮动盒子` < `inline/inline-box的水平盒子` < `z-index:auto或看成z-index:0,不依赖z-index的层叠上下文（定位元素）` < `定位且z-index > 0的元素`
 
   - 为什么内联元素的层叠顺序要比浮动元素和块状元素都高
     - 诸如border/background一般为装饰属性，而浮动和块状元素一般用作布局，而内联元素都是内容.因此，一定要让内容的层叠顺序相当高。
