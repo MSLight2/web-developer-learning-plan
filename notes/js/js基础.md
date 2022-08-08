@@ -215,7 +215,89 @@ function instanceofOperator (lVal, rVal) {
   }
 }
 ```
-
+###----------------debounce(防抖动)和throttle(节流)------------------
+去抖和节流是不同的，因为节流虽然中间的处理函数被限制了，但是只是减少了频率，而去抖则把中间的处理函数全部过滤掉了，只执行规判定时间内的最后一个事件。
+**简洁版**
+节流:
+```
+function throttle (fn, waitTime = 300) {
+  let lastTime = 0
+  return () => {
+    let now = new Date()
+    if (now - lastTime - waitTime > 0) {
+      fn()
+      lastTime = now
+    }
+  }
+}
+```
+防抖:
+```
+function debounce (fn, waitTime = 300) {
+  let timeout = null
+  return () => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => { fn() }, waitTime)
+  }
+}
+```
+**完善版**
+节流：
+```
+function throttle (fn, waitTime = 300) {
+  let lastTime = 0
+  let timeout = null
+  return () => {
+    let now = new Date()
+    // 如果上次执行的时间和这次触发的时间大于一个执行周期，则执行
+    if (now - lastTime - waitTime > 0) {
+       if (timeout) {
+         clearTimeout(timeout)
+         timeout = null
+       }
+        if (fn) fn()
+        lastTime = now
+    } else if (!timeout) {
+      // 时间间隔不足一个执行周期，或最后一次时不会进入
+      timeout = setTimeout(() => {
+        if (fn) fn()
+      }, waitTime)
+    }
+  }
+}
+// 调用
+let throttleFn = throttle(() => {
+    console.log('节流了~')
+},  500)
+throttleFn()
+```
+防抖(抖动被判定结束后，方法才会得到执行)：
+```
+function debounce (fn, waitTime = 300) {
+  let lastTime = 0
+  let timeout = null
+  return () => {
+    let now = new Date()
+    // 不是一次抖动则执行
+    if (now - lastTime - waitTime > 0) {
+      setTimeout(() => {
+        if (fn) fn()
+      }, waitTime)
+    } else {
+      if (timeout) {
+         clearTimeout(timeout)
+         timeout = null
+       }
+      timeout = setTimeout(() => {
+        if (fn) fn()
+      }, waitTime)
+    }
+    // 上次的触发时间
+    lastTime = now
+  }
+}
+// 调用方式同上
+```
 ### 多维数组转换一维数组
 - 使用`concat`和`apply`结合
 ```js
