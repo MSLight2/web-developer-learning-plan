@@ -594,6 +594,16 @@ if (typeof JSON.parse !== 'function') {
 
 附上`JSON.parse`源码(C语言): [JSON.parse](https://github.com/v8/v8/blob/master/src/json/json-parser.h)
 
+### JS错误类型
+- `EvalError`：eval 函数的错误，已经不被JavaScript抛出，但依旧保存兼容性
+- `RangeError`：范围错误
+- `ReferenceError`：引用错误
+- `SyntaxError`：语法解析错误
+- `TypeError`：类型错误
+- `URIError`：URL处理函数错误
+- `InternalError`：JavaScript 引擎内部的错误（非标准错误）
+- `Error`：通用错误，可用于用户自定义的异常的基础对象。
+
 ### es5和es6对于继承的实现
 - es5的继承
   |继承|特性|实例|优点|缺点|
