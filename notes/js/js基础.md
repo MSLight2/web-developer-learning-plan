@@ -220,24 +220,29 @@ function instanceofOperator (lVal, rVal) {
 **简洁版**
 节流:
 ```
-function throttle (fn, waitTime = 300) {
-  let lastTime = 0
-  return () => {
-    let now = new Date()
-    if (now - lastTime - waitTime > 0) {
-      fn()
-      lastTime = now
+export function throttle(fn, time = 300) {
+  let lastTime = null;
+  return function() {
+    const now = new Date();
+    if (now - lastTime - time > 0) {
+      if (fn) fn.apply(this, arguments);
+      lastTime = now;
     }
   }
 }
 ```
 防抖:
 ```
-function debounce (fn, waitTime = 300) {
-  let timeout = null
-  return () => {
-    if (timeout) clearTimeout(timeout)
-    timeout = setTimeout(() => { fn() }, waitTime)
+export function debounce(fn, time = 300) {
+  let timeout = null;
+  return function() {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => {
+      timeout = null;
+      if (fn) fn.apply(this, arguments);
+    }, time);
   }
 }
 ```
