@@ -218,3 +218,11 @@
     - CSS Modules集中在同一个地方，只应用于该组件
     - 能结局传统css的很多问题，一些css的书写规范不再是必须的了，当然懂得要更多，学习成本也就更高
     - 和webpack、react配合使用更加；vue-cli3.0也支持。
+### CSS滚动条
+- ::-webkit-scrollbar — 整个滚动条.
+- ::-webkit-scrollbar-button — 滚动条上的按钮 (上下箭头).
+- ::-webkit-scrollbar-thumb — 滚动条上的滚动滑块.
+- ::-webkit-scrollbar-track — 滚动条轨道.
+- ::-webkit-scrollbar-track-piece — 滚动条没有滑块的轨道部分.
+- ::-webkit-scrollbar-corner — 当同时有垂直滚动条和水平滚动条时交汇的部分.
+- ::-webkit-resizer — 某些元素的corner部分的部分样式(例:textarea的可拖动按钮)
